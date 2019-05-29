@@ -1,4 +1,5 @@
 globals [
+  aircraft_rows
   passenger_no
 ]
 
@@ -25,11 +26,13 @@ to setup_passengers
     ; Passenger appearance.
     set shape "person"
     set color 9
+    set target_seat_row 5
+    set target_seat_col -2
 
     set heading 90
 
     ; Position passengers at the airplane's entrance.
-    set xcor -16
+    set xcor (- aircraft_rows / 2)
     set ycor 0
 
     set is_seated? false
@@ -37,19 +40,19 @@ to setup_passengers
 end
 
 to setup_aircraft_model
-  if aircraft_model = "A320" [set seat_rows 30]
-  ask patch -16 0 [set pcolor blue]  ; Color the spawn point.
+  if aircraft_model = "A320" [set aircraft_rows 30]
+  ask patch (- aircraft_rows / 2) 0 [set pcolor blue]  ; Color the spawn point.
 
-  foreach (n-values seat_rows [i -> i]) [
+  foreach (n-values aircraft_rows [i -> i]) [
     row -> foreach (filter [i -> i != 0] (n-values 7 [i -> i - 3])) [
-      col -> ask patch (row - 15) col [
+      col -> ask patch (row - (aircraft_rows / 2 - 1)) col [
         set pcolor green
         set plabel (word (row + 1) "," col)
       ]
     ]
   ]
 
-  set passenger_no seat_rows * 3
+  set passenger_no aircraft_rows * 3
   ;set passenger_no 1
 end
 
@@ -60,15 +63,16 @@ end
 to go
   tick
   ask turtles [
-    forward 1
+    let aisle_row (xcor + (aircraft_rows / 2))
+    if target_seat_row != aisle_row [forward 1]
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 14
 10
-788
-228
+741
+227
 -1
 -1
 23.22222222222222
@@ -81,8 +85,8 @@ GRAPHICS-WINDOW
 0
 0
 1
--16
-16
+-15
+15
 -4
 4
 0
@@ -126,20 +130,20 @@ NIL
 1
 
 CHOOSER
-795
-46
-933
-91
+751
+10
+889
+55
 aircraft_model
 aircraft_model
 "A320" "Custom"
 0
 
 SLIDER
-795
-95
-967
-128
+751
+59
+923
+92
 seat_rows
 seat_rows
 0
@@ -151,10 +155,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-796
-182
-888
-227
+752
+146
+844
+191
 NIL
 passenger_no
 17
@@ -162,10 +166,10 @@ passenger_no
 11
 
 CHOOSER
-795
-133
-933
-178
+751
+97
+889
+142
 boarding_method
 boarding_method
 "back-to-front" "random"
