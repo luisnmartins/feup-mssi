@@ -42,9 +42,15 @@ to setup_aircraft_model
 
   foreach (n-values seat_rows [i -> i]) [
     row -> foreach (filter [i -> i != 0] (n-values 7 [i -> i - 3])) [
-      col -> ask patch (row - 15) col [
+      col -> ask patch (x
+    ]
+  ]
+
+  foreach (n-values seat_rows [i -> i]) [
+    x -> foreach (n-values 7 [j -> j - 3]) [
+      y -> ask patch (x - 15) y [
         set pcolor green
-        set plabel (word (row + 1) "," col)
+        set plabel (word (x + 1) "," y)
       ]
     ]
   ]
