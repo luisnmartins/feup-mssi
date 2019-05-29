@@ -44,8 +44,8 @@ to setup_aircraft_model
   if aircraft_model = "A320" [set aircraft_rows 30]
   ask patch (- aircraft_rows / 2) 0 [set pcolor blue]  ;Color the spawn point.
 
-  foreach (range 1 (aircraft_rows + 1)) [
-    row -> foreach (filter [i -> i != 0] (range -3 4)) [
+  foreach (n-values aircraft_rows [i -> i + 1]) [
+    row -> foreach () [
       col -> ask patch (row - (aircraft_rows / 2)) col [
         set pcolor green
         set plabel (word (row + 1) "," col)
