@@ -19,7 +19,7 @@ to setup
   __clear-all-and-reset-ticks
   setup_aircraft_model
   setup_passengers
-  setup_random_method
+  setup_boarding_method
 end
 
 to setup_passengers
@@ -53,13 +53,30 @@ to setup_aircraft_model
     ]
   ]
 
-  set passenger_no aircraft_rows * 3
+  set passenger_no aircraft_rows * 6
 end
 
+to setup_boarding_method
+  if boarding_method = "random" [setup_random_method]
+end
+
+
+;; Setup random boarding method.
 to setup_random_method
   let row_lst (range 1 (aircraft_rows + 1))
   let col_lst (filter [i -> i != 0] (range -3 4))
 
+  ;; Create a list with every possible seat permutation. E.g. [[row col]...[row col]].
+  let permutations []
+  foreach row_lst [row -> foreach col_lst [col -> set permutations insert-item 0 permutations (list row col)]]
+
+  ;; Attribute each passenger a unique seat on the airplane.
+  foreach shuffle (range 0 passenger_no) [
+    pass_who -> ask turtle pass_who [
+      set target_seat_row (item 0 (item pass_who permutations))
+      set target_seat_col (item 1 (item pass_who permutations))
+    ]
+  ]
 end
 
 to go
@@ -73,7 +90,7 @@ to go
     ]
 
     ;Walk forward only if it's not already in its seat.
-    if ycor != target_seat_col [forward 1]
+    ifelse ycor != target_seat_col [forward 1] [ask patch-here [set pcolor red]]
   ]
 end
 @#$#@#$#@
@@ -81,7 +98,7 @@ GRAPHICS-WINDOW
 14
 10
 741
-227
+228
 -1
 -1
 23.22222222222222
@@ -122,9 +139,9 @@ NIL
 1
 
 BUTTON
-82
+155
 239
-149
+222
 272
 NIL
 go
@@ -183,6 +200,23 @@ boarding_method
 boarding_method
 "back-to-front" "random"
 0
+
+BUTTON
+85
+239
+148
+272
+NIL
+go
+NIL
+1
+T
+OBSERVER
+NIL
+NIL
+NIL
+NIL
+1
 
 @#$#@#$#@
 ## WHAT IS IT?
