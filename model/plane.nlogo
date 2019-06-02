@@ -1,10 +1,14 @@
 globals [
   aircraft_rows
   passenger_no
+  ticket_queue
+  next_boarding_passenger
+  total_elapsed_time
 ]
 
 turtles-own [
   is_seated?
+  has_boarded?
   target_seat_row  ; From 0 to the aircraft's seat_rows.
   target_seat_col  ; [-3, -2, -1, 1, 2, 3], negative meaning it's seated to the left of the aisle and positive to the right.
 ]
@@ -20,6 +24,8 @@ to setup
   setup_aircraft_model
   setup_passengers
   setup_boarding_method
+
+  set next_boarding_passenger first ticket_queue
 end
 
 to setup_passengers
@@ -28,7 +34,7 @@ to setup_passengers
     set shape "person"
     set color 9
     set target_seat_row 5
-    set target_seat_col -2
+    set target_seat_col -3
 
     set heading 90
 
@@ -37,6 +43,22 @@ to setup_passengers
     set ycor 0
 
     set is_seated? false
+    set has_boarded? false
+  ]
+
+  let row_lst (range 1 (aircraft_rows + 1))
+  let col_lst (filter [i -> i != 0] (range -3 4))
+
+  ;; Create a list with every possible seat permutation. E.g. [[row col]...[row col]].
+  let permutations []
+  foreach row_lst [row -> foreach col_lst [col -> set permutations insert-item 0 permutations (list row col)]]
+
+  ;; Assign each passenger a unique seat on the airplane.
+  foreach shuffle (range 0 passenger_no) [
+    pass_who -> ask turtle pass_who [
+      set target_seat_row (item 0 (item pass_who permutations))
+      set target_seat_col (item 1 (item pass_who permutations))
+    ]
   ]
 end
 
@@ -57,48 +79,66 @@ to setup_aircraft_model
 end
 
 to setup_boarding_method
-  if boarding_method = "random" [setup_random_method]
+  if boarding_method = "random" [set ticket_queue setup_random_method]
 end
 
-
 ;; Setup random boarding method.
-to setup_random_method
-  let row_lst (range 1 (aircraft_rows + 1))
-  let col_lst (filter [i -> i != 0] (range -3 4))
+to-report setup_random_method
+  report shuffle (range 0 passenger_no)
+end
 
-  ;; Create a list with every possible seat permutation. E.g. [[row col]...[row col]].
-  let permutations []
-  foreach row_lst [row -> foreach col_lst [col -> set permutations insert-item 0 permutations (list row col)]]
+;; Board the next passenger and remove it from the queue (FIFO).
+to board_next_passenger
+  ask turtle first ticket_queue [set has_boarded? true]
+  set ticket_queue but-first ticket_queue
 
-  ;; Attribute each passenger a unique seat on the airplane.
-  foreach shuffle (range 0 passenger_no) [
-    pass_who -> ask turtle pass_who [
-      set target_seat_row (item 0 (item pass_who permutations))
-      set target_seat_col (item 1 (item pass_who permutations))
-    ]
-  ]
+  if length ticket_queue > 0 [set next_boarding_passenger first ticket_queue]
 end
 
 to go
   tick
-  ask turtles [
+
+  every .1 [
+    set total_elapsed_time total_elapsed_time + .1
+  ]
+
+  ;; Board the next passenger and remove it from the queue (FIFO).
+  if length ticket_queue > 0 [board_next_passenger]
+
+  ask turtles with [has_boarded?] [
     let aisle_row (xcor + (aircraft_rows / 2))
 
-    if target_seat_row = aisle_row [
-      ;Decide which direction rotate when it has found its row.
+    ;; Check for seat interferences.
+    if patch-ahead 1 != nobody and any? (turtles-on patch-ahead 1) with [is_seated?] [
+        ;;show "Seat interference!"
+    ]
+
+    ;; Decide which direction rotate when it has found its row.
+    if target_seat_row = aisle_row and not is_seated? [
       ifelse target_seat_col > 0 [set heading 0] [set heading 180]
     ]
 
-    ;Walk forward only if it's not already in its seat.
-    ifelse ycor != target_seat_col [forward 1] [ask patch-here [set pcolor red]]
+    ;; Seat the passenger if it's in the right column.
+    ifelse ycor = target_seat_col [
+      ask patch-here [set pcolor red]
+      set is_seated? true
+    ] [
+      fd 1
+      ;;ifelse any? (turtles-on patch-ahead 1) with [not is_seated?] [show "Aisle interference!"] [fd 1]
+    ]
+  ]
+
+  if not any? patches with [pcolor = green] [
+    show "Thank you for flying with Copacabana Airlines."
+    stop
   ]
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
 14
-10
+66
 741
-228
+284
 -1
 -1
 23.22222222222222
@@ -123,9 +163,9 @@ ticks
 
 BUTTON
 15
-239
+295
 78
-272
+328
 NIL
 setup
 NIL
@@ -140,9 +180,9 @@ NIL
 
 BUTTON
 155
-239
+295
 222
-272
+328
 NIL
 go
 T
@@ -157,9 +197,9 @@ NIL
 
 CHOOSER
 751
-10
+66
 889
-55
+111
 aircraft_model
 aircraft_model
 "A320" "Custom"
@@ -167,9 +207,9 @@ aircraft_model
 
 SLIDER
 751
-59
+115
 923
-92
+148
 seat_rows
 seat_rows
 0
@@ -182,9 +222,9 @@ HORIZONTAL
 
 MONITOR
 752
-146
+202
 844
-191
+247
 NIL
 passenger_no
 17
@@ -193,19 +233,19 @@ passenger_no
 
 CHOOSER
 751
-97
+153
 889
-142
+198
 boarding_method
 boarding_method
 "back-to-front" "random"
-0
+1
 
 BUTTON
 85
-239
+295
 148
-272
+328
 NIL
 go
 NIL
@@ -217,6 +257,28 @@ NIL
 NIL
 NIL
 1
+
+MONITOR
+14
+14
+98
+59
+Now boarding
+next_boarding_passenger
+17
+1
+11
+
+MONITOR
+104
+14
+161
+59
+Elapsed
+total_elapsed_time
+3
+1
+11
 
 @#$#@#$#@
 ## WHAT IS IT?
