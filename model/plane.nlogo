@@ -6,17 +6,23 @@ globals [
   total_elapsed_time
   seat_interferences
   aisle_interferences
+  boarded_agents
 ]
 
 turtles-own [
   is_seated?
   has_boarded?
-  time_moving_after_seated
-  nmb_moves_after_seated
+  number_of_seat_interferences
+  total_time_of_seat_interferences
+  number_of_aisle_interferences
+  total_time_of_aisle_interferences
+  stowing_time
+  has_luggage?
+  patch_ticks_speed ;patch/tick
+  move_aisle?
 
-  luggage_store_ticks
+  have_to_wait?
 
-  is_stopped?
   is_stowing?
   target_seat_row  ; From 0 to the aircraft's seat_rows.
   target_seat_col  ; [-3, -2, -1, 1, 2, 3], negative meaning it's seated to the left of the aisle and positive to the right.
@@ -33,6 +39,7 @@ to setup
   setup_aircraft_model
   setup_passengers
   setup_boarding_method
+  set boarded_agents []
 
   set next_boarding_passenger first ticket_queue
 end
@@ -41,12 +48,11 @@ to setup_passengers
   create-turtles passenger_no [
     ; Passenger appearance.
     set shape "person"
-    set color 9
+    set color one-of [ white brown blue yellow ]
     set target_seat_row 5
     set target_seat_col -3
     set is_stowing? false
-    set luggage_store_ticks 0
-    set is_stopped? false
+    set move_aisle? false
 
 
     set heading 90
@@ -67,7 +73,7 @@ to setup_passengers
   foreach row_lst [row -> foreach col_lst [col -> set permutations insert-item 0 permutations (list row col)]]
 
   ;; Assign each passenger a unique seat on the airplane.
-  foreach shuffle (range 0 passenger_no) [
+  foreach (range 0 passenger_no) [
     pass_who -> ask turtle pass_who [
       set target_seat_row (item 0 (item pass_who permutations))
       set target_seat_col (item 1 (item pass_who permutations))
@@ -77,7 +83,6 @@ to setup_passengers
   let passengers_with_luggage round ( 180 * luggage_percentage / 100 )
   ask n-of passengers_with_luggage turtles [
     set shape "person farmer"
-    set luggage_store_ticks stowing_luggage_ticks
   ]
 
 end
@@ -90,7 +95,7 @@ to setup_aircraft_model
     row -> foreach (filter [i -> i != 0] (range -3 4)) [
       col -> ask patch (row - (aircraft_rows / 2)) col [
         set pcolor green
-        set plabel (word (row + 1) "," col)
+        ;set plabel (word (row + 1) "," col)
       ]
     ]
   ]
@@ -111,6 +116,7 @@ end
 ;; Board the next passenger and remove it from the queue (FIFO).
 to board_next_passenger
   ask turtle first ticket_queue [set has_boarded? true]
+  set boarded_agents lput first ticket_queue boarded_agents
   set ticket_queue but-first ticket_queue
 
   if length ticket_queue > 0 [set next_boarding_passenger first ticket_queue]
@@ -126,50 +132,52 @@ to go
   ;; Board the next passenger and remove it from the queue (FIFO).
   if length ticket_queue > 0 [board_next_passenger]
 
-  ask turtles with [has_boarded? and not is_seated?] [
+  foreach boarded_agents [agent -> ask turtle agent [
+    show agent
     let aisle_row (xcor + (aircraft_rows / 2))
 
-    if patch-ahead 1 != nobody and heading = 90
+
+    if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1)
     [
       set aisle_interferences aisle_interferences + 1
-    ]
-
-    if luggage_store_ticks = 0
-    [
-      set is_stowing? false
-      set is_stoppped? false
-    ]
-    if is_stowing? [
-      set luggage_store_ticks luggage_store_ticks - 1
       stop
     ]
 
+
     ;; ask turtles with [is_seated? and
-    ;; Check for seat interferences.
+    ;; Check for seat interferences
 
     ;; Decide which direction rotate when it has found its row.
     if target_seat_row = aisle_row and not is_seated?
     [
-      if luggage_store_ticks > 0
-      [
-        set is_stowing? true
-        stop
-      ]
       ifelse target_seat_col > 0 [set heading 0] [set heading 180]
-    ]
 
-    if abs(target_seat_col) = 2
-    [
-      if patch-ahead 1 != nobody and any? (turtles-on patch-ahead 1) with [is_seated?] and ycor != target_seat_col
+      ; has a middle or window seat
+      if abs(target_seat_col) > 1
       [
-        set seat_interferences seat_interferences + 1
-        stop
-
+        let var false
+        ; if has someone next to him ask to move backwards
+        ifelse any? (turtles-on patch-ahead 1) with [is_seated?] and ycor != target_seat_col
+        [
+          show "ONE MOVE"
+          ask (turtles-on patch-ahead 1)[fd -1 set move_aisle? true]
+          set number_of_seat_interferences number_of_seat_interferences + 1
+          set var true
+        ][
+          ;if has someone in the middle and his seat is a window seat
+          if abs(target_seat_col) = 3
+          [
+            ; ask middle guy to move backward
+            if patch-ahead 2 != nobody and any? (turtles-on patch-ahead 2) with [is_seated?] and ycor != target_seat_col
+            [
+              show "GANDA CARLOS"
+              ask (turtles-on patch-ahead 2)[fd -1 set move_aisle? true]
+              set var true
+            ]
+          ]
+        ]
+        if var = true [stop]
       ]
-    ]
-    if abs(target_seat_col) = 3
-    [
-
     ]
 
     ;; Seat the passenger if it's in the right column.
@@ -179,8 +187,36 @@ to go
       set is_seated? true
     ]
     [
+
       fd 1
       ;;ifelse any? (turtles-on patch-ahead 1) with [not is_seated?] [show "Aisle interference!"] [fd 1]
+    ]
+  ]
+  ]
+
+  ask turtles with [has_boarded? and is_seated? and ycor != target_seat_col] [
+    ifelse (ycor = 0 and move_aisle? = true) [
+      beep
+      set move_aisle? false
+   ]
+   [
+      if move_aisle? = true [stop]
+      show "MOVING FD"
+      ifelse (count turtles-here = 1) [
+        if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
+          fd 1
+        ]
+      ]
+      [
+         show "MOVING FD"
+        let my_patch other (turtles-on patch-here)
+        let most_distant max-one-of my_patch [ abs(target_seat_col) ]
+        if (most_distant = self) [
+          if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
+            fd 1
+          ]
+        ]
+      ]
     ]
   ]
 
