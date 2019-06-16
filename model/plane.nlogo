@@ -4,11 +4,20 @@ globals [
   ticket_queue
   next_boarding_passenger
   total_elapsed_time
+  seat_interferences
+  aisle_interferences
 ]
 
 turtles-own [
   is_seated?
   has_boarded?
+  time_moving_after_seated
+  nmb_moves_after_seated
+
+  luggage_store_ticks
+
+  is_stopped?
+  is_stowing?
   target_seat_row  ; From 0 to the aircraft's seat_rows.
   target_seat_col  ; [-3, -2, -1, 1, 2, 3], negative meaning it's seated to the left of the aisle and positive to the right.
 ]
@@ -35,6 +44,10 @@ to setup_passengers
     set color 9
     set target_seat_row 5
     set target_seat_col -3
+    set is_stowing? false
+    set luggage_store_ticks 0
+    set is_stopped? false
+
 
     set heading 90
 
@@ -60,6 +73,13 @@ to setup_passengers
       set target_seat_col (item 1 (item pass_who permutations))
     ]
   ]
+
+  let passengers_with_luggage round ( 180 * luggage_percentage / 100 )
+  ask n-of passengers_with_luggage turtles [
+    set shape "person farmer"
+    set luggage_store_ticks stowing_luggage_ticks
+  ]
+
 end
 
 to setup_aircraft_model
@@ -77,6 +97,7 @@ to setup_aircraft_model
 
   set passenger_no aircraft_rows * 6
 end
+
 
 to setup_boarding_method
   if boarding_method = "random" [set ticket_queue setup_random_method]
@@ -105,24 +126,59 @@ to go
   ;; Board the next passenger and remove it from the queue (FIFO).
   if length ticket_queue > 0 [board_next_passenger]
 
-  ask turtles with [has_boarded?] [
+  ask turtles with [has_boarded? and not is_seated?] [
     let aisle_row (xcor + (aircraft_rows / 2))
 
-    ;; Check for seat interferences.
-    if patch-ahead 1 != nobody and any? (turtles-on patch-ahead 1) with [is_seated?] [
-        ;;show "Seat interference!"
+    if patch-ahead 1 != nobody and heading = 90
+    [
+      set aisle_interferences aisle_interferences + 1
     ]
 
+    if luggage_store_ticks = 0
+    [
+      set is_stowing? false
+      set is_stoppped? false
+    ]
+    if is_stowing? [
+      set luggage_store_ticks luggage_store_ticks - 1
+      stop
+    ]
+
+    ;; ask turtles with [is_seated? and
+    ;; Check for seat interferences.
+
     ;; Decide which direction rotate when it has found its row.
-    if target_seat_row = aisle_row and not is_seated? [
+    if target_seat_row = aisle_row and not is_seated?
+    [
+      if luggage_store_ticks > 0
+      [
+        set is_stowing? true
+        stop
+      ]
       ifelse target_seat_col > 0 [set heading 0] [set heading 180]
     ]
 
+    if abs(target_seat_col) = 2
+    [
+      if patch-ahead 1 != nobody and any? (turtles-on patch-ahead 1) with [is_seated?] and ycor != target_seat_col
+      [
+        set seat_interferences seat_interferences + 1
+        stop
+
+      ]
+    ]
+    if abs(target_seat_col) = 3
+    [
+
+    ]
+
     ;; Seat the passenger if it's in the right column.
-    ifelse ycor = target_seat_col [
+    ifelse ycor = target_seat_col
+    [
       ask patch-here [set pcolor red]
       set is_seated? true
-    ] [
+    ]
+    [
       fd 1
       ;;ifelse any? (turtles-on patch-ahead 1) with [not is_seated?] [show "Aisle interference!"] [fd 1]
     ]
@@ -136,12 +192,12 @@ end
 @#$#@#$#@
 GRAPHICS-WINDOW
 14
-66
-741
-284
+67
+749
+287
 -1
 -1
-23.22222222222222
+23.452
 1
 10
 1
@@ -214,17 +270,17 @@ seat_rows
 seat_rows
 0
 100
-38.0
+0.0
 1
 1
 NIL
 HORIZONTAL
 
 MONITOR
-752
-202
-844
-247
+934
+114
+1026
+159
 NIL
 passenger_no
 17
@@ -277,6 +333,58 @@ MONITOR
 Elapsed
 total_elapsed_time
 3
+1
+11
+
+MONITOR
+933
+62
+1060
+107
+seat_interferences
+seat_interferences
+17
+1
+11
+
+SLIDER
+751
+213
+930
+246
+luggage_percentage
+luggage_percentage
+0
+100
+0.0
+1
+1
+NIL
+HORIZONTAL
+
+SLIDER
+751
+256
+941
+289
+stowing_luggage_ticks
+stowing_luggage_ticks
+0
+10
+0.0
+1
+1
+NIL
+HORIZONTAL
+
+MONITOR
+935
+170
+1064
+215
+aisle_interferences
+aisle_interferences
+17
 1
 11
 
@@ -496,6 +604,21 @@ Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300
 Rectangle -7500403 true true 127 79 172 94
 Polygon -7500403 true true 195 90 240 150 225 180 165 105
 Polygon -7500403 true true 105 90 60 150 75 180 135 105
+
+person farmer
+false
+0
+Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 195 90
+Polygon -1 true false 60 195 90 210 114 154 120 195 180 195 187 157 210 210 240 195 195 90 165 90 150 105 150 150 135 90 105 90
+Circle -7500403 true true 110 5 80
+Rectangle -7500403 true true 127 79 172 94
+Polygon -13345367 true false 120 90 120 180 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 180 90 172 89 165 135 135 135 127 90
+Polygon -6459832 true false 116 4 113 21 71 33 71 40 109 48 117 34 144 27 180 26 188 36 224 23 222 14 178 16 167 0
+Line -16777216 false 225 90 270 90
+Line -16777216 false 225 15 225 90
+Line -16777216 false 270 15 270 90
+Line -16777216 false 247 15 247 90
+Rectangle -6459832 true false 240 90 255 300
 
 plant
 false
