@@ -120,6 +120,7 @@ end
 to setup_boarding_method
   if boarding_method = "random" [set ticket_queue setup_random_method]
   if boarding_method = "back-to-front" [set ticket_queue setup_back_to_front_method]
+  if boarding_method = "wilma" [set ticket_queue setup_wilma_method]
   if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
 end
 
@@ -152,6 +153,23 @@ to-report setup_back_to_front_method
   report queue
 end
 
+;; Setup Wilma boarding method.
+to-report setup_wilma_method
+  let col_lst reverse (range 1 4)
+  foreach (range -3 0) [col -> set col_lst lput col col_lst]
+  let queue []
+
+  foreach col_lst [
+    grp -> ask turtles with [target_seat_col = grp] [
+      show grp
+      set assigned_group grp
+      set queue lput who queue
+    ]
+  ]
+
+  report queue
+end
+
 
 ;; Set ordered boarding method.
 to-report setup_ordered_method
@@ -173,13 +191,36 @@ to board_not_seated_agent [agent]
      set analysed true
      let aisle_row (xcor + (aircraft_rows / 2))
 
+     ifelse patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90
+     [
+      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+      if on_aisle_interference? = false [
+        set number_of_aisle_interferences number_of_aisle_interferences + 1
+        set aisle_interferences aisle_interferences + 1
+        set on_aisle_interference? true
+      ]
+      stop
+     ]
+     [
+      if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false] and heading = 90
+      [
+        set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+        if on_aisle_interference? = false [
+          set number_of_aisle_interferences number_of_aisle_interferences + 1
+          set on_aisle_interference? true
+        ]
+        stop
+      ]
+     ]
+
+
      if target_seat_row = aisle_row and not is_seated?
      [
       ;; Decide which direction rotate when it has found its row.
       ifelse target_seat_col > 0 [set heading 0] [set heading 180]
 
       ifelse (is_stowing? = false and stowing_time > 0) [
-        ifelse(patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
+       ifelse(patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
           let number (random (100 * simpathy))
           ifelse(number <= 93) [
             set transparent? true
@@ -252,29 +293,6 @@ to board_not_seated_agent [agent]
         if var = true [stop]
       ]
     ]
-
-
-     ifelse (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90) or (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = true] and target_seat_row = aisle_row + 1 and heading = 90)
-     [
-      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
-      if on_aisle_interference? = false [
-        set number_of_aisle_interferences number_of_aisle_interferences + 1
-        set aisle_interferences aisle_interferences + 1
-        set on_aisle_interference? true
-      ]
-      stop
-     ]
-     [
-      if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false] and heading = 90
-      [
-        set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
-        if on_aisle_interference? = false [
-          set number_of_aisle_interferences number_of_aisle_interferences + 1
-          set on_aisle_interference? true
-        ]
-        stop
-      ]
-     ]
 
     ;; Seat the passenger if it's in the right column.
     ifelse ycor = target_seat_col
@@ -436,8 +454,8 @@ CHOOSER
 161
 boarding_method
 boarding_method
-"back-to-front" "random" "ordered"
-0
+"back-to-front" "random" "wilma" "ordered"
+2
 
 BUTTON
 85
