@@ -126,6 +126,8 @@ to setup_boarding_method
   if boarding_method = "random" [set ticket_queue setup_random_method]
   if boarding_method = "back-to-front" [set ticket_queue setup_back_to_front_method]
   if boarding_method = "block-back-to-front" [set ticket_queue setup_block_back_to_front_method]
+  if boarding_method = "front-to-back" [set ticket_queue setup_front_to_back_method]	
+  if boarding_method = "block-front-to-back" [set ticket_queue setup_block_front_to_back_method]
   if boarding_method = "wilma" [set ticket_queue setup_wilma_method]
   if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
   if boarding_method = "steffen" [set ticket_queue setup_steffen_method]
@@ -169,6 +171,16 @@ to-report setup_block_back_to_front_method
   ]
 
   report queue
+end
+
+;; Setup front-to-back boarding method.	
+to-report setup_front_to_back_method	
+  report reverse setup_back_to_front_method	
+end	
+
+;; Setup front-to-back boarding method.	
+to-report setup_block_front_to_back_method	
+  report reverse setup_block_back_to_front_method	
 end
 
 ;; Setup Wilma boarding method.
@@ -740,7 +752,7 @@ CHOOSER
 161
 boarding_method
 boarding_method
-"block-back-to-front" "back-to-front" "random" "wilma" "steffen" "kautzka" "ordered"
+"block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "steffen" "kautzka" "ordered"
 3
 
 BUTTON
@@ -1191,7 +1203,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.1.0
+NetLogo 6.0.4
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
