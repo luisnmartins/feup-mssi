@@ -20,6 +20,10 @@ turtles-own [
   has_luggage?
   patch_ticks_speed ;patch/tick
   move_aisle?
+  analysed
+  on_aisle_interference?
+  transparent?
+  simpathy
 
   have_to_wait?
 
@@ -53,6 +57,12 @@ to setup_passengers
     set target_seat_col -3
     set is_stowing? false
     set move_aisle? false
+    set analysed false
+    set on_aisle_interference? false
+    set total_time_of_aisle_interferences 0
+    set patch_ticks_speed 1
+    set transparent? false
+    set simpathy 1
 
 
     set heading 90
@@ -83,6 +93,7 @@ to setup_passengers
   let passengers_with_luggage round ( 180 * luggage_percentage / 100 )
   ask n-of passengers_with_luggage turtles [
     set shape "person farmer"
+    set stowing_time 2 + random 5
   ]
 
 end
@@ -95,7 +106,7 @@ to setup_aircraft_model
     row -> foreach (filter [i -> i != 0] (range -3 4)) [
       col -> ask patch (row - (aircraft_rows / 2)) col [
         set pcolor green
-        ;set plabel (word (row + 1) "," col)
+        set plabel (word (row + 1))
       ]
     ]
   ]
@@ -122,58 +133,109 @@ to board_next_passenger
   if length ticket_queue > 0 [set next_boarding_passenger first ticket_queue]
 end
 
-to go
-  tick
+to board_not_seated_agent [agent]
+    ask turtle agent [
+     if(is_seated?) [stop]
+     set analysed true
+     let aisle_row (xcor + (aircraft_rows / 2))
 
-  every .1 [
-    set total_elapsed_time total_elapsed_time + .1
-  ]
-
-  ;; Board the next passenger and remove it from the queue (FIFO).
-  if length ticket_queue > 0 [board_next_passenger]
-
-  foreach boarded_agents [agent -> ask turtle agent [
-    show agent
-    let aisle_row (xcor + (aircraft_rows / 2))
-
-
-    if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1)
-    [
-      set aisle_interferences aisle_interferences + 1
+     ifelse patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90
+     [
+      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+      if on_aisle_interference? = false [
+        set number_of_aisle_interferences number_of_aisle_interferences + 1
+        set aisle_interferences aisle_interferences + 1
+        set on_aisle_interference? true
+      ]
       stop
-    ]
+     ]
+     [
+      if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false] and heading = 90
+      [
+        set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+        if on_aisle_interference? = false [
+          set number_of_aisle_interferences number_of_aisle_interferences + 1
+          set on_aisle_interference? true
+        ]
+        stop
+      ]
+     ]
 
 
-    ;; ask turtles with [is_seated? and
-    ;; Check for seat interferences
-
-    ;; Decide which direction rotate when it has found its row.
-    if target_seat_row = aisle_row and not is_seated?
-    [
+     if target_seat_row = aisle_row and not is_seated?
+     [
+      ;; Decide which direction rotate when it has found its row.
       ifelse target_seat_col > 0 [set heading 0] [set heading 180]
+
+      ifelse (is_stowing? = false and stowing_time > 0) [
+       ifelse(patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
+          let number (random (100 * simpathy))
+          ifelse(number <= 93) [
+            set transparent? true
+            set simpathy simpathy + 1
+            stop
+          ]
+          [
+            set transparent? false
+            set simpathy 1
+            set is_stowing? true
+          ]
+       ]
+       [
+          let number (random (100 * simpathy))
+          ifelse(number <= 53) [
+            set transparent? true
+            set simpathy simpathy + 1
+            stop
+          ]
+          [
+            set transparent? false
+            set simpathy 1
+            set is_stowing? true
+          ]
+       ]
+      ][
+        set is_stowing? true
+      ]
+
+      ifelse (stowing_time > 0) [
+       set stowing_time stowing_time - 1
+       stop
+      ]
+      [
+        if(is_stowing? = true) [
+          set is_stowing? false
+        ]
+      ]
 
       ; has a middle or window seat
       if abs(target_seat_col) > 1
       [
         let var false
         ; if has someone next to him ask to move backwards
-        ifelse any? (turtles-on patch-ahead 1) with [is_seated?] and ycor != target_seat_col
+        if patch-ahead 1 != nobody and any? (turtles-on patch-ahead 1) with [is_seated?] and ycor != target_seat_col
         [
           show "ONE MOVE"
-          ask (turtles-on patch-ahead 1)[fd -1 set move_aisle? true]
+          ask (turtles-on patch-ahead 1)[
+            set analysed true
+            set number_of_seat_interferences number_of_seat_interferences + 1
+            fd (0 - patch_ticks_speed)
+            set move_aisle? true
+          ]
+          set seat_interferences seat_interferences + 1
           set number_of_seat_interferences number_of_seat_interferences + 1
           set var true
-        ][
-          ;if has someone in the middle and his seat is a window seat
-          if abs(target_seat_col) = 3
+        ]
+        ;if has someone in the middle and his seat is a window seat
+        if abs(target_seat_col) = 3
+        [
+          ; ask middle guy to move backward
+          if patch-ahead 2 != nobody [show turtles-on patch-ahead 2]
+          if patch-ahead 2 != nobody and any? (turtles-on patch-ahead 2) with [is_seated? = true] and ycor != target_seat_col
           [
-            ; ask middle guy to move backward
-            if patch-ahead 2 != nobody and any? (turtles-on patch-ahead 2) with [is_seated?] and ycor != target_seat_col
-            [
-              show "GANDA CARLOS"
-              ask (turtles-on patch-ahead 2)[fd -1 set move_aisle? true]
-              set var true
-            ]
+            show "GANDA CARLOS"
+            ask (turtles-on patch-ahead 2)[set analysed true fd (0 - patch_ticks_speed) set move_aisle? true]
+            set var true
           ]
         ]
         if var = true [stop]
@@ -188,39 +250,64 @@ to go
     ]
     [
 
-      fd 1
+      fd patch_ticks_speed
+      set on_aisle_interference? false
       ;;ifelse any? (turtles-on patch-ahead 1) with [not is_seated?] [show "Aisle interference!"] [fd 1]
     ]
   ]
-  ]
+end
 
-  ask turtles with [has_boarded? and is_seated? and ycor != target_seat_col] [
+to move_seated_agent [agent]
+  ask turtle agent [
+    if(not is_seated? or ycor = target_seat_col) [stop]
+    set analysed true
     ifelse (ycor = 0 and move_aisle? = true) [
       beep
       set move_aisle? false
    ]
    [
       if move_aisle? = true [stop]
-      show "MOVING FD"
       ifelse (count turtles-here = 1) [
-        if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
-          fd 1
+        show "TURTLE ALONE"
+        if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1) with [analysed = true]) [
+          fd patch_ticks_speed
         ]
       ]
       [
-         show "MOVING FD"
-        let my_patch other (turtles-on patch-here)
+        show "MOVING FD"
+        let my_patch (turtles-on patch-here)
+        show my_patch
         let most_distant max-one-of my_patch [ abs(target_seat_col) ]
+        show most_distant
         if (most_distant = self) [
           if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
-            fd 1
+            fd patch_ticks_speed
           ]
         ]
       ]
     ]
   ]
+end
+
+to go
+  tick
+
+  every .1 [
+    set total_elapsed_time total_elapsed_time + .1
+  ]
+
+  ;; Board the next passenger and remove it from the queue (FIFO).
+  if length ticket_queue > 0 [board_next_passenger]
+
+  foreach boarded_agents [agent -> ask turtle agent [set analysed false] board_not_seated_agent agent]
+
+  foreach boarded_agents [agent -> move_seated_agent agent]
+
 
   if not any? patches with [pcolor = green] [
+    let sum2 0
+    foreach boarded_agents [agent -> ask turtle agent [set sum2 sum2 + number_of_seat_interferences]]
+    show sum2
     show "Thank you for flying with Copacabana Airlines."
     stop
   ]
@@ -392,22 +479,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-0.0
-1
-1
-NIL
-HORIZONTAL
-
-SLIDER
-751
-256
-941
-289
-stowing_luggage_ticks
-stowing_luggage_ticks
-0
-10
-0.0
+50.0
 1
 1
 NIL
