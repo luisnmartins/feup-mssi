@@ -124,6 +124,7 @@ to setup_boarding_method
   if boarding_method = "wilma" [set ticket_queue setup_wilma_method]
   if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
   if boarding_method = "steffen" [set ticket_queue setup_steffen_method]
+  if boarding_method = "kautzka" [set ticket_queue setup_kautzka_method]
 end
 
 ;; Setup random boarding method.
@@ -258,6 +259,111 @@ to-report setup_steffen_method
 
 
   report reverse queue
+
+end
+
+to-report setup_kautzka_method
+
+  ifelse family_size = 1[
+
+    report setup_steffen_method
+  ][
+
+    ifelse family_size = 2 [
+
+      let i 0
+      let queue []
+      while [i < 29][
+        set queue  insert-item 0 queue (i * 6)
+        set queue  insert-item 0 queue ((i * 6) + 1)
+        set i i + 2
+      ]
+
+      set i 0
+      while [i < 29] [
+        set queue insert-item 0 queue ((i * 6) + 5)
+        set queue insert-item 0 queue ((i * 6) + 4)
+        set i i + 2
+      ]
+
+      set i 1
+      while [i < 30] [
+        set queue insert-item 0 queue ((i * 6))
+        set queue insert-item 0 queue ((i * 6) + 1)
+        set i i + 2
+      ]
+
+      set i 1
+      while [i < 30] [
+        set queue insert-item 0 queue ((i * 6) + 5)
+        set queue insert-item 0 queue ((i * 6) + 4)
+        set i i + 2
+      ]
+
+      set i 0
+      while [i < 29][
+        set queue  insert-item 0 queue ((i * 6) + 2)
+        set i i + 2
+      ]
+
+      set i 0
+      while [i < 29] [
+        set queue insert-item 0 queue ((i * 6) + 3)
+        set i i + 2
+      ]
+
+      set i 1
+      while [i < 30] [
+        set queue insert-item 0 queue ((i * 6) + 2)
+        set i i + 2
+      ]
+
+      set i 1
+      while [i < 30] [
+        set queue insert-item 0 queue ((i * 6) + 3)
+        set i i + 2
+      ]
+
+      report reverse queue
+
+    ][
+
+      let i 0
+      let queue []
+      while [i < 29][
+        set queue  insert-item 0 queue (i * 6)
+        set queue  insert-item 0 queue ((i * 6) + 1)
+        set queue  insert-item 0 queue ((i * 6) + 2)
+        set i i + 2
+      ]
+
+      set i 0
+      while [i < 29] [
+        set queue insert-item 0 queue ((i * 6) + 5)
+        set queue insert-item 0 queue ((i * 6) + 4)
+        set queue insert-item 0 queue ((i * 6) + 3)
+        set i i + 2
+      ]
+
+      set i 1
+      while [i < 30] [
+        set queue insert-item 0 queue ((i * 6))
+        set queue insert-item 0 queue ((i * 6) + 1)
+        set queue insert-item 0 queue ((i * 6) + 2)
+        set i i + 2
+      ]
+
+      set i 1
+      while [i < 30] [
+        set queue insert-item 0 queue ((i * 6) + 5)
+        set queue insert-item 0 queue ((i * 6) + 4)
+        set queue insert-item 0 queue ((i * 6) + 3)
+        set i i + 2
+      ]
+      report reverse queue
+    ]
+  ]
+
 
 end
 
@@ -539,7 +645,7 @@ CHOOSER
 161
 boarding_method
 boarding_method
-"back-to-front" "random" "wilma" "steffen" "ordered"
+"back-to-front" "random" "wilma" "steffen" "kautzka" "ordered"
 2
 
 BUTTON
@@ -601,7 +707,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-50.0
+49.0
 1
 1
 NIL
@@ -617,6 +723,21 @@ aisle_interferences
 17
 1
 11
+
+SLIDER
+760
+220
+932
+253
+family_size
+family_size
+1
+3
+2.0
+1
+1
+NIL
+HORIZONTAL
 
 @#$#@#$#@
 ## WHAT IS IT?
