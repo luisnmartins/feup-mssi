@@ -30,6 +30,7 @@ turtles-own [
   is_stowing?
   target_seat_row  ; From 0 to the aircraft's seat_rows.
   target_seat_col  ; [-3, -2, -1, 1, 2, 3], negative meaning it's seated to the left of the aisle and positive to the right.
+  group
 ]
 
 patches-own [
@@ -106,7 +107,7 @@ to setup_aircraft_model
     row -> foreach (filter [i -> i != 0] (range -3 4)) [
       col -> ask patch (row - (aircraft_rows / 2)) col [
         set pcolor green
-        set plabel (word (row + 1))
+        set plabel (word (row))
       ]
     ]
   ]
@@ -117,11 +118,27 @@ end
 
 to setup_boarding_method
   if boarding_method = "random" [set ticket_queue setup_random_method]
+  if boarding_method = "back-to-front" [set ticket_queue setup_back_to_front_method]
+  if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
 end
 
 ;; Setup random boarding method.
 to-report setup_random_method
   report shuffle (range 0 passenger_no)
+end
+
+;; Setup back-to-front boarding method.
+to-report setup_back_to_front_method
+
+  ;; Assign groups to passengers.
+
+
+end
+
+
+;; Set ordered boarding method.
+to-report setup_ordered_method
+  report (range 0 passenger_no)
 end
 
 ;; Board the next passenger and remove it from the queue (FIFO).
@@ -384,21 +401,6 @@ aircraft_model
 "A320" "Custom"
 0
 
-SLIDER
-751
-115
-923
-148
-seat_rows
-seat_rows
-0
-100
-0.0
-1
-1
-NIL
-HORIZONTAL
-
 MONITOR
 934
 114
@@ -411,20 +413,20 @@ passenger_no
 11
 
 CHOOSER
-751
-153
-889
-198
+752
+116
+890
+161
 boarding_method
 boarding_method
-"back-to-front" "random"
-1
+"back-to-front" "random" "ordered"
+2
 
 BUTTON
 85
-295
+296
 148
-328
+329
 NIL
 go
 NIL
@@ -471,10 +473,10 @@ seat_interferences
 11
 
 SLIDER
-751
-213
-930
-246
+752
+165
+931
+198
 luggage_percentage
 luggage_percentage
 0
