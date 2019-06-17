@@ -156,36 +156,13 @@ to board_not_seated_agent [agent]
      set analysed true
      let aisle_row (xcor + (aircraft_rows / 2))
 
-     ifelse patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90
-     [
-      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
-      if on_aisle_interference? = false [
-        set number_of_aisle_interferences number_of_aisle_interferences + 1
-        set aisle_interferences aisle_interferences + 1
-        set on_aisle_interference? true
-      ]
-      stop
-     ]
-     [
-      if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false] and heading = 90
-      [
-        set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
-        if on_aisle_interference? = false [
-          set number_of_aisle_interferences number_of_aisle_interferences + 1
-          set on_aisle_interference? true
-        ]
-        stop
-      ]
-     ]
-
-
      if target_seat_row = aisle_row and not is_seated?
      [
       ;; Decide which direction rotate when it has found its row.
       ifelse target_seat_col > 0 [set heading 0] [set heading 180]
 
       ifelse (is_stowing? = false and stowing_time > 0) [
-       ifelse(patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
+        ifelse(patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
           let number (random (100 * simpathy))
           ifelse(number <= 93) [
             set transparent? true
@@ -258,6 +235,29 @@ to board_not_seated_agent [agent]
         if var = true [stop]
       ]
     ]
+
+
+     ifelse (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90) or (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = true] and target_seat_row = aisle_row + 1 and heading = 90)
+     [
+      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+      if on_aisle_interference? = false [
+        set number_of_aisle_interferences number_of_aisle_interferences + 1
+        set aisle_interferences aisle_interferences + 1
+        set on_aisle_interference? true
+      ]
+      stop
+     ]
+     [
+      if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false] and heading = 90
+      [
+        set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+        if on_aisle_interference? = false [
+          set number_of_aisle_interferences number_of_aisle_interferences + 1
+          set on_aisle_interference? true
+        ]
+        stop
+      ]
+     ]
 
     ;; Seat the passenger if it's in the right column.
     ifelse ycor = target_seat_col
