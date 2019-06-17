@@ -46,7 +46,6 @@ to setup
   setup_passengers
   setup_boarding_method
   set boarded_agents []
-
   set next_boarding_passenger first ticket_queue
 end
 
@@ -92,6 +91,8 @@ to setup_passengers
     ]
   ]
 
+
+
   let passengers_with_luggage round ( 180 * luggage_percentage / 100 )
   ask n-of passengers_with_luggage turtles [
     set shape "person farmer"
@@ -122,6 +123,7 @@ to setup_boarding_method
   if boarding_method = "back-to-front" [set ticket_queue setup_back_to_front_method]
   if boarding_method = "wilma" [set ticket_queue setup_wilma_method]
   if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
+  if boarding_method = "steffen" [set ticket_queue setup_steffen_method]
 end
 
 ;; Setup random boarding method.
@@ -156,15 +158,18 @@ end
 ;; Setup Wilma boarding method.
 to-report setup_wilma_method
   let col_lst reverse (range 1 4)
-  foreach (range -3 0) [col -> set col_lst lput col col_lst]
   let queue []
 
   foreach col_lst [
-    grp -> ask turtles with [target_seat_col = grp] [
-      show grp
-      set assigned_group grp
-      set queue lput who queue
+    grp -> ask turtles with [target_seat_col = grp or target_seat_col = (- grp)] [
+      if grp = 3 [set assigned_group 1]
+      if grp = 2 [set assigned_group 2]
+      if grp = 1 [set assigned_group 3]
     ]
+  ]
+
+  foreach reverse (range 1 4) [
+    grp -> ask turtles with [assigned_group = grp] [set queue fput who queue]
   ]
 
   report queue
@@ -174,6 +179,86 @@ end
 ;; Set ordered boarding method.
 to-report setup_ordered_method
   report (range 0 passenger_no)
+end
+
+;; Set steffen method
+to-report setup_steffen_method
+  let i 0
+  let queue []
+  while [i < 29][
+   set queue  insert-item 0 queue (i * 6)
+    set i i + 2
+  ]
+
+  set i 0
+  while [i < 29] [
+    set queue insert-item 0 queue ((i * 6) + 5)
+    set i i + 2
+  ]
+
+  set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6))
+   set i i + 2
+  ]
+
+   set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 5)
+   set i i + 2
+  ]
+
+  set i 0
+   while [i < 29][
+   set queue  insert-item 0 queue ((i * 6) + 1)
+    set i i + 2
+  ]
+
+  set i 0
+  while [i < 29] [
+    set queue insert-item 0 queue ((i * 6) + 4)
+    set i i + 2
+  ]
+
+  set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 1)
+   set i i + 2
+  ]
+
+   set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 4)
+   set i i + 2
+  ]
+
+  set i 0
+   while [i < 29][
+   set queue  insert-item 0 queue ((i * 6) + 2)
+    set i i + 2
+  ]
+
+  set i 0
+  while [i < 29] [
+    set queue insert-item 0 queue ((i * 6) + 3)
+    set i i + 2
+  ]
+
+    set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 2)
+   set i i + 2
+  ]
+
+   set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 3)
+   set i i + 2
+  ]
+
+
+  report reverse queue
+
 end
 
 ;; Board the next passenger and remove it from the queue (FIFO).
@@ -454,7 +539,7 @@ CHOOSER
 161
 boarding_method
 boarding_method
-"back-to-front" "random" "wilma" "ordered"
+"back-to-front" "random" "wilma" "steffen" "ordered"
 2
 
 BUTTON
