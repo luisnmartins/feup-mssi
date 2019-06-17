@@ -126,8 +126,6 @@ to setup_boarding_method
   if boarding_method = "random" [set ticket_queue setup_random_method]
   if boarding_method = "back-to-front" [set ticket_queue setup_back_to_front_method]
   if boarding_method = "block-back-to-front" [set ticket_queue setup_block_back_to_front_method]
-  if boarding_method = "front-to-back" [set ticket_queue setup_front_to_back_method]
-  if boarding_method = "block-front-to-back" [set ticket_queue setup_block_front_to_back_method]
   if boarding_method = "wilma" [set ticket_queue setup_wilma_method]
   if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
   if boarding_method = "steffen" [set ticket_queue setup_steffen_method]
@@ -171,16 +169,6 @@ to-report setup_block_back_to_front_method
   ]
 
   report queue
-end
-
-;; Setup front-to-back boarding method.
-to-report setup_front_to_back_method
-  report reverse setup_back_to_front_method
-end
-
-;; Setup front-to-back boarding method.
-to-report setup_block_front_to_back_method
-  report reverse setup_block_back_to_front_method
 end
 
 ;; Setup Wilma boarding method.
@@ -561,6 +549,30 @@ to move_seated_agent [agent]
   ]
 end
 
+to-report get_all_satisfactions
+
+  let total_satisfactions []
+  foreach boarded_agents [agent -> ask turtle agent [
+    let satisfaction 0
+    set satisfaction (0.7 * total_boarding_time) + (0.2 * total_time_of_seat_interferences) + (0.1 * total_time_of_aisle_interferences)
+    set total_satisfactions insert-item 0 total_satisfactions satisfaction
+
+  ]]
+  report  reverse total_satisfactions
+
+end
+
+to-report get_average_satisfaction
+  let satisfaction 0
+  report mean get_all_satisfactions
+
+end
+
+to-report get_median_satisfaction
+  let satisfaction 0
+  report median get_all_satisfactions
+end
+
 to go
   tick
 
@@ -674,8 +686,8 @@ CHOOSER
 161
 boarding_method
 boarding_method
-"block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "steffen" "kautzka" "ordered"
-0
+"block-back-to-front" "back-to-front" "random" "wilma" "steffen" "kautzka" "ordered"
+4
 
 BUTTON
 85
@@ -736,7 +748,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-50.0
+0.0
 1
 1
 NIL
@@ -754,37 +766,19 @@ aisle_interferences
 11
 
 SLIDER
-752
-203
-924
-236
+760
+220
+932
+253
 family_size
 family_size
 1
 3
-3.0
+2.0
 1
 1
 NIL
 HORIZONTAL
-
-PLOT
-753
-243
-953
-393
-Passenger seating rate
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles with [is_seated?]"
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -1147,6 +1141,29 @@ NetLogo 6.1.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
+<experiments>
+  <experiment name="experiment" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_average_satisfaction</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;steffen&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="2"/>
+    </enumeratedValueSet>
+  </experiment>
+</experiments>
 @#$#@#$#@
 @#$#@#$#@
 default
