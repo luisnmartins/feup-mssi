@@ -46,7 +46,6 @@ to setup
   setup_passengers
   setup_boarding_method
   set boarded_agents []
-
   set next_boarding_passenger first ticket_queue
 end
 
@@ -92,6 +91,8 @@ to setup_passengers
     ]
   ]
 
+
+
   let passengers_with_luggage round ( 180 * luggage_percentage / 100 )
   ask n-of passengers_with_luggage turtles [
     set shape "person farmer"
@@ -121,6 +122,7 @@ to setup_boarding_method
   if boarding_method = "random" [set ticket_queue setup_random_method]
   if boarding_method = "back-to-front" [set ticket_queue setup_back_to_front_method]
   if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
+  if boarding_method = "steffen" [set ticket_queue setup_steffen_method]
 end
 
 ;; Setup random boarding method.
@@ -156,6 +158,86 @@ end
 ;; Set ordered boarding method.
 to-report setup_ordered_method
   report (range 0 passenger_no)
+end
+
+;; Set steffen method
+to-report setup_steffen_method
+  let i 0
+  let queue []
+  while [i < 29][
+   set queue  insert-item 0 queue (i * 6)
+    set i i + 2
+  ]
+
+  set i 0
+  while [i < 29] [
+    set queue insert-item 0 queue ((i * 6) + 5)
+    set i i + 2
+  ]
+
+  set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6))
+   set i i + 2
+  ]
+
+   set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 5)
+   set i i + 2
+  ]
+
+  set i 0
+   while [i < 29][
+   set queue  insert-item 0 queue ((i * 6) + 1)
+    set i i + 2
+  ]
+
+  set i 0
+  while [i < 29] [
+    set queue insert-item 0 queue ((i * 6) + 4)
+    set i i + 2
+  ]
+
+  set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 1)
+   set i i + 2
+  ]
+
+   set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 4)
+   set i i + 2
+  ]
+
+  set i 0
+   while [i < 29][
+   set queue  insert-item 0 queue ((i * 6) + 2)
+    set i i + 2
+  ]
+
+  set i 0
+  while [i < 29] [
+    set queue insert-item 0 queue ((i * 6) + 3)
+    set i i + 2
+  ]
+
+    set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 2)
+   set i i + 2
+  ]
+
+   set i 1
+  while [i < 30] [
+   set queue insert-item 0 queue ((i * 6) + 3)
+   set i i + 2
+  ]
+
+
+  report reverse queue
+
 end
 
 ;; Board the next passenger and remove it from the queue (FIFO).
@@ -436,7 +518,7 @@ CHOOSER
 161
 boarding_method
 boarding_method
-"back-to-front" "random" "ordered"
+"back-to-front" "random" "ordered" "steffen"
 0
 
 BUTTON
@@ -872,7 +954,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
