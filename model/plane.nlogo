@@ -126,9 +126,10 @@ to setup_boarding_method
   if boarding_method = "random" [set ticket_queue setup_random_method]
   if boarding_method = "back-to-front" [set ticket_queue setup_back_to_front_method]
   if boarding_method = "block-back-to-front" [set ticket_queue setup_block_back_to_front_method]
-  if boarding_method = "front-to-back" [set ticket_queue setup_front_to_back_method]	
+  if boarding_method = "front-to-back" [set ticket_queue setup_front_to_back_method]
   if boarding_method = "block-front-to-back" [set ticket_queue setup_block_front_to_back_method]
   if boarding_method = "wilma" [set ticket_queue setup_wilma_method]
+  if boarding_method = "weird-wilma" [set ticket_queue setup_weird_wilma_method]
   if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
   if boarding_method = "steffen" [set ticket_queue setup_steffen_method]
   if boarding_method = "kautzka" [set ticket_queue setup_kautzka_method]
@@ -173,14 +174,14 @@ to-report setup_block_back_to_front_method
   report queue
 end
 
-;; Setup front-to-back boarding method.	
-to-report setup_front_to_back_method	
-  report reverse setup_back_to_front_method	
-end	
+;; Setup front-to-back boarding method.
+to-report setup_front_to_back_method
+  report reverse setup_back_to_front_method
+end
 
-;; Setup front-to-back boarding method.	
-to-report setup_block_front_to_back_method	
-  report reverse setup_block_back_to_front_method	
+;; Setup front-to-back boarding method.
+to-report setup_block_front_to_back_method
+  report reverse setup_block_back_to_front_method
 end
 
 ;; Setup Wilma boarding method.
@@ -192,6 +193,25 @@ to-report setup_wilma_method
     grp -> ask turtles with [target_seat_col = grp or target_seat_col = (- grp)] [
       if grp = 3 [set assigned_group 1]
       if grp = 2 [set assigned_group 2]
+      if grp = 1 [set assigned_group 3]
+    ]
+  ]
+
+  foreach reverse (range 1 4) [
+    grp -> ask turtles with [assigned_group = grp] [set queue fput who queue]
+  ]
+
+  report queue
+end
+
+to-report setup_weird_wilma_method
+  let col_lst reverse (range 1 4)
+  let queue []
+
+  foreach col_lst [
+    grp -> ask turtles with [target_seat_col = grp or target_seat_col = (- grp)] [
+      if grp = 3 [set assigned_group 2]
+      if grp = 2 [set assigned_group 1]
       if grp = 1 [set assigned_group 3]
     ]
   ]
@@ -411,28 +431,6 @@ to board_not_seated_agent [agent]
      set analysed true
      let aisle_row (xcor + (aircraft_rows / 2))
 
-     ifelse patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90
-     [
-      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
-      if on_aisle_interference? = false [
-        set number_of_aisle_interferences number_of_aisle_interferences + 1
-        set aisle_interferences aisle_interferences + 1
-        set on_aisle_interference? true
-      ]
-      stop
-     ]
-     [
-      if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false] and heading = 90
-      [
-        set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
-        if on_aisle_interference? = false [
-          set number_of_aisle_interferences number_of_aisle_interferences + 1
-          set on_aisle_interference? true
-        ]
-        stop
-      ]
-     ]
-
 
      if target_seat_row = aisle_row and not is_seated?
      [
@@ -492,6 +490,7 @@ to board_not_seated_agent [agent]
             set number_of_seat_interferences number_of_seat_interferences + 1
             fd (0 - patch_ticks_speed)
             set move_aisle? true
+            show move_aisle?
           ]
           set seat_interferences seat_interferences + 1
           set number_of_seat_interferences number_of_seat_interferences + 1
@@ -501,10 +500,13 @@ to board_not_seated_agent [agent]
         if abs(target_seat_col) = 3
         [
           ; ask middle guy to move backward
-          if patch-ahead 2 != nobody [show turtles-on patch-ahead 2]
           if patch-ahead 2 != nobody and any? (turtles-on patch-ahead 2) with [is_seated? = true] and ycor != target_seat_col
           [
-            ask (turtles-on patch-ahead 2)[set analysed true fd (0 - patch_ticks_speed) set move_aisle? true]
+            ask (turtles-on patch-ahead 2)[
+              set analysed true
+              fd (0 - patch_ticks_speed)
+              set move_aisle? true
+            ]
             set var true
           ]
         ]
@@ -512,25 +514,49 @@ to board_not_seated_agent [agent]
       ]
     ]
 
-    ;; Seat the passenger if it's in the right column.
-    ifelse ycor = target_seat_col
-    [
-      ask patch-here [set pcolor red]
-      set is_seated? true
-    ]
-    [
+    ifelse (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90) or (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = true] and target_seat_row = aisle_row + 1 and heading = 90)
+	  [
+	    set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+	    if on_aisle_interference? = false [
+	      set number_of_aisle_interferences number_of_aisle_interferences + 1
+	      set aisle_interferences aisle_interferences + 1
+	      set on_aisle_interference? true
+	    ]
+	    stop
+	   ]
+	   [
+	    if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false] and heading = 90
+	    [
+	      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+	      if on_aisle_interference? = false [
+	        set number_of_aisle_interferences number_of_aisle_interferences + 1
+	        set on_aisle_interference? true
+	      ]
+	      stop
+	     ]
+	    ]
 
-      fd patch_ticks_speed
-      set on_aisle_interference? false
-      ;;ifelse any? (turtles-on patch-ahead 1) with [not is_seated?] [show "Aisle interference!"] [fd 1]
-    ]
-  ]
+     ;; Seat the passenger if it's in the right column.
+     ifelse ycor = target_seat_col
+     [
+       ask patch-here [set pcolor red]
+       set is_seated? true
+     ]
+     [
+
+       fd patch_ticks_speed
+       set on_aisle_interference? false
+       ;;ifelse any? (turtles-on patch-ahead 1) with [not is_seated?] [show "Aisle interference!"] [fd 1]
+     ]
+   ]
 end
 
 to move_seated_agent [agent]
   ask turtle agent [
     if(not is_seated? or ycor = target_seat_col) [stop]
     set analysed true
+    show "SEATED"
+    show move_aisle?
     ifelse (ycor = 0 and move_aisle? = true) [
       beep
       set move_aisle? false
@@ -538,19 +564,14 @@ to move_seated_agent [agent]
    [
       if move_aisle? = true [stop]
       set total_time_of_seat_interferences total_time_of_seat_interferences + 1
-      show total_time_of_seat_interferences
       ifelse (count turtles-here = 1) [
-        show "TURTLE ALONE"
         if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1) with [analysed = true]) [
           fd patch_ticks_speed
         ]
       ]
       [
-        show "MOVING FD"
         let my_patch (turtles-on patch-here)
-        show my_patch
         let most_distant max-one-of my_patch [ abs(target_seat_col) ]
-        show most_distant
         if (most_distant = self) [
           if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
             fd patch_ticks_speed
@@ -559,84 +580,6 @@ to move_seated_agent [agent]
       ]
     ]
   ]
-end
-
-to-report get_all_satisfactions
-
-  let total_satisfactions []
-  foreach boarded_agents [agent -> ask turtle agent [
-    let satisfaction 0
-    set satisfaction (0.7 * total_boarding_time) + (0.2 * total_time_of_seat_interferences) + (0.1 * total_time_of_aisle_interferences)
-    set total_satisfactions insert-item 0 total_satisfactions satisfaction
-
-  ]]
-  report  reverse total_satisfactions
-
-end
-
-to-report get_average_satisfaction
-  let satisfaction 0
-  report mean get_all_satisfactions
-
-end
-
-to-report get_median_satisfaction
-  let satisfaction 0
-  report median get_all_satisfactions
-end
-
-to-report get_all_boarding_times
-  let total_times []
-  foreach boarded_agents [agent -> ask turtle agent [
-    set total_times insert-item 0 total_times total_boarding_time
-  ]]
-
-  report reverse total_times
-end
-
-to-report difference_time_with_luggage
-  let agents []
-  foreach boarded_agents [agent -> ask turtle agent [
-    if has_luggage? = true[
-      set agents insert-item 0 agents total_boarding_time
-    ]
-
-  ]]
-  report abs( (max agents) - (min agents))
-end
-
-to-report difference_time_without_luggage
-  let agents []
-  foreach boarded_agents [agent -> ask turtle agent [
-    if not has_luggage? = true[
-      set agents insert-item 0 agents total_boarding_time
-    ]
-
-  ]]
-  report abs( (max agents) - (min agents))
-
-end
-
-to-report difference_average
-  let agents_luggage []
-  foreach boarded_agents [agent -> ask turtle agent [
-    if has_luggage? = true [
-      set agents_luggage insert-item 0 agents_luggage total_boarding_time
-    ]
-
-  ]]
-
-  let agents_no_luggage []
-  foreach boarded_agents [agent -> ask turtle agent [
-    if not has_luggage? = true[
-      set agents_no_luggage insert-item 0 agents_no_luggage total_boarding_time
-    ]
-
-  ]]
-
-  report abs ((mean agents_luggage) - (agents_no_luggage))
-
-
 end
 
 to go
@@ -648,6 +591,8 @@ to go
 
   ;; Board the next passenger and remove it from the queue (FIFO).
   if length ticket_queue > 0 [board_next_passenger]
+
+  show boarded_agents
 
   foreach boarded_agents [agent -> ask turtle agent [set analysed false] board_not_seated_agent agent]
 
@@ -752,8 +697,8 @@ CHOOSER
 161
 boarding_method
 boarding_method
-"block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "steffen" "kautzka" "ordered"
-3
+"block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
+2
 
 BUTTON
 85
@@ -832,19 +777,37 @@ aisle_interferences
 11
 
 SLIDER
-760
-220
-932
-253
+752
+203
+924
+236
 family_size
 family_size
 1
 3
-2.0
+1.0
 1
 1
 NIL
 HORIZONTAL
+
+PLOT
+753
+243
+953
+393
+Passenger seating rate
+NIL
+NIL
+0.0
+10.0
+0.0
+10.0
+true
+false
+"" ""
+PENS
+"default" 1.0 0 -16777216 true "" "plot count turtles with [is_seated?]"
 
 @#$#@#$#@
 ## WHAT IS IT?
