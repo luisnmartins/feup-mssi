@@ -7,6 +7,7 @@ globals [
   seat_interferences
   aisle_interferences
   boarded_agents
+  group_size
 ]
 
 turtles-own [
@@ -30,7 +31,7 @@ turtles-own [
   is_stowing?
   target_seat_row  ; From 0 to the aircraft's seat_rows.
   target_seat_col  ; [-3, -2, -1, 1, 2, 3], negative meaning it's seated to the left of the aisle and positive to the right.
-  group
+  assigned_group
 ]
 
 patches-own [
@@ -131,8 +132,24 @@ end
 to-report setup_back_to_front_method
 
   ;; Assign groups to passengers.
+  set group_size 5
+  let group_rows (aircraft_rows / group_size)
 
+  let groups []
+  let queue []
 
+  foreach (range group_size) [
+    index -> set groups (insert-item index groups (range ((index * group_rows) + 1) (((index + 1) * group_rows) + 1)))
+  ]
+
+  foreach groups [
+    grp -> ask turtles with [member? target_seat_row grp] [
+      set assigned_group ((position grp groups) + 1)
+      set queue (insert-item 0 queue who)
+    ]
+  ]
+
+  report queue
 end
 
 
@@ -420,7 +437,7 @@ CHOOSER
 boarding_method
 boarding_method
 "back-to-front" "random" "ordered"
-2
+0
 
 BUTTON
 85
