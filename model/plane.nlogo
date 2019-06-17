@@ -573,6 +573,60 @@ to-report get_median_satisfaction
   report median get_all_satisfactions
 end
 
+to-report get_all_boarding_times
+  let total_times []
+  foreach boarded_agents [agent -> ask turtle agent [
+    set total_times insert-item 0 total_times total_boarding_time
+  ]]
+
+  report reverse total_times
+end
+
+to-report difference_time_with_luggage
+  let agents []
+  foreach boarded_agents [agent -> ask turtle agent [
+    if has_luggage? = true[
+      set agents insert-item 0 agents total_boarding_time
+    ]
+
+  ]]
+  report abs( (max agents) - (min agents))
+end
+
+to-report difference_time_without_luggage
+  let agents []
+  foreach boarded_agents [agent -> ask turtle agent [
+    if not has_luggage? = true[
+      set agents insert-item 0 agents total_boarding_time
+    ]
+
+  ]]
+  report abs( (max agents) - (min agents))
+
+end
+
+to-report difference_average
+  let agents_luggage []
+  foreach boarded_agents [agent -> ask turtle agent [
+    if has_luggage? = true [
+      set agents_luggage insert-item 0 agents_luggage total_boarding_time
+    ]
+
+  ]]
+
+  let agents_no_luggage []
+  foreach boarded_agents [agent -> ask turtle agent [
+    if not has_luggage? = true[
+      set agents_no_luggage insert-item 0 agents_no_luggage total_boarding_time
+    ]
+
+  ]]
+
+  report abs ((mean agents_luggage) - (agents_no_luggage))
+
+
+end
+
 to go
   tick
 
@@ -1150,6 +1204,9 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_all_boarding_times</metric>
+    <metric>difference_time_with_luggage</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="0"/>
     </enumeratedValueSet>
