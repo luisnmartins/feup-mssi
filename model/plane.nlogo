@@ -121,6 +121,7 @@ end
 to setup_boarding_method
   if boarding_method = "random" [set ticket_queue setup_random_method]
   if boarding_method = "back-to-front" [set ticket_queue setup_back_to_front_method]
+  if boarding_method = "block-back-to-front" [set ticket_queue setup_block_back_to_front_method]
   if boarding_method = "wilma" [set ticket_queue setup_wilma_method]
   if boarding_method = "ordered" [set ticket_queue setup_ordered_method]
   if boarding_method = "steffen" [set ticket_queue setup_steffen_method]
@@ -132,8 +133,18 @@ to-report setup_random_method
   report shuffle (range 0 passenger_no)
 end
 
-;; Setup back-to-front boarding method.
 to-report setup_back_to_front_method
+  let queue []
+
+  foreach reverse (range 1 (aircraft_rows + 1)) [
+    index -> ask turtles with [index = target_seat_row] [set queue lput who queue]
+  ]
+
+  report queue
+end
+
+;; Setup back-to-front boarding method.
+to-report setup_block_back_to_front_method
 
   ;; Assign groups to passengers.
   set group_size 5
@@ -641,12 +652,12 @@ passenger_no
 CHOOSER
 752
 116
-890
+907
 161
 boarding_method
 boarding_method
-"back-to-front" "random" "wilma" "steffen" "kautzka" "ordered"
-2
+"block-back-to-front" "back-to-front" "random" "wilma" "steffen" "kautzka" "ordered"
+1
 
 BUTTON
 85
@@ -707,7 +718,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-49.0
+0.0
 1
 1
 NIL
