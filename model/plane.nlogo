@@ -17,6 +17,7 @@ turtles-own [
   total_time_of_seat_interferences
   number_of_aisle_interferences
   total_time_of_aisle_interferences
+  total_boarding_time
   stowing_time
   has_luggage?
   patch_ticks_speed ;patch/tick
@@ -25,6 +26,7 @@ turtles-own [
   on_aisle_interference?
   transparent?
   simpathy
+
 
   have_to_wait?
 
@@ -61,6 +63,8 @@ to setup_passengers
     set analysed false
     set on_aisle_interference? false
     set total_time_of_aisle_interferences 0
+    set total_time_of_seat_interferences 0
+    set total_boarding_time 0
     set patch_ticks_speed 1
     set transparent? false
     set simpathy 1
@@ -402,6 +406,8 @@ end
 to board_not_seated_agent [agent]
     ask turtle agent [
      if(is_seated?) [stop]
+
+     set total_boarding_time total_boarding_time + 1
      set analysed true
      let aisle_row (xcor + (aircraft_rows / 2))
 
@@ -481,7 +487,6 @@ to board_not_seated_agent [agent]
         ; if has someone next to him ask to move backwards
         if patch-ahead 1 != nobody and any? (turtles-on patch-ahead 1) with [is_seated?] and ycor != target_seat_col
         [
-          show "ONE MOVE"
           ask (turtles-on patch-ahead 1)[
             set analysed true
             set number_of_seat_interferences number_of_seat_interferences + 1
@@ -499,7 +504,6 @@ to board_not_seated_agent [agent]
           if patch-ahead 2 != nobody [show turtles-on patch-ahead 2]
           if patch-ahead 2 != nobody and any? (turtles-on patch-ahead 2) with [is_seated? = true] and ycor != target_seat_col
           [
-            show "GANDA CARLOS"
             ask (turtles-on patch-ahead 2)[set analysed true fd (0 - patch_ticks_speed) set move_aisle? true]
             set var true
           ]
@@ -533,6 +537,8 @@ to move_seated_agent [agent]
    ]
    [
       if move_aisle? = true [stop]
+      set total_time_of_seat_interferences total_time_of_seat_interferences + 1
+      show total_time_of_seat_interferences
       ifelse (count turtles-here = 1) [
         show "TURTLE ALONE"
         if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1) with [analysed = true]) [
@@ -669,7 +675,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "steffen" "kautzka" "ordered"
-7
+0
 
 BUTTON
 85
@@ -1137,7 +1143,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
