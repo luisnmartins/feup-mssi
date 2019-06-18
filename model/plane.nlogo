@@ -60,6 +60,7 @@ to setup_passengers
     set target_seat_col -3
     set is_stowing? false
     set move_aisle? false
+    set has_luggage? false
     set analysed false
     set on_aisle_interference? false
     set total_time_of_aisle_interferences 0
@@ -101,6 +102,7 @@ to setup_passengers
   ask n-of passengers_with_luggage turtles [
     set shape "person farmer"
     set stowing_time 2 + random 5
+    set has_luggage? true
   ]
 
 end
@@ -582,6 +584,86 @@ to move_seated_agent [agent]
   ]
 end
 
+to-report get_all_satisfactions
+
+  let total_satisfactions []
+  foreach boarded_agents [agent -> ask turtle agent [
+    let satisfaction 0
+    set satisfaction (0.7 * total_boarding_time) + (0.2 * total_time_of_seat_interferences) + (0.1 * total_time_of_aisle_interferences)
+    set total_satisfactions insert-item 0 total_satisfactions satisfaction
+
+  ]]
+  report  reverse total_satisfactions
+
+end
+
+to-report get_average_satisfaction
+  let satisfaction 0
+  report mean get_all_satisfactions
+
+end
+
+to-report get_median_satisfaction
+  let satisfaction 0
+  report median get_all_satisfactions
+end
+
+to-report get_all_boarding_times
+  let total_times []
+  foreach boarded_agents [agent -> ask turtle agent [
+    set total_times insert-item 0 total_times total_boarding_time
+  ]]
+
+  report reverse total_times
+end
+
+to-report difference_time_with_luggage
+  let agents []
+  foreach boarded_agents [agent -> ask turtle agent [
+    if has_luggage? = true[
+      set agents insert-item 0 agents total_boarding_time
+    ]
+
+  ]]
+  report abs( (max agents) - (min agents))
+end
+
+to-report difference_time_without_luggage
+  let agents []
+  foreach boarded_agents [agent -> ask turtle agent [
+    if  has_luggage? = false[
+      set agents insert-item 0 agents total_boarding_time
+    ]
+
+  ]]
+  report abs( (max agents) - (min agents))
+
+end
+
+to-report difference_average
+  let agents_luggage []
+  foreach boarded_agents [agent -> ask turtle agent [
+    if has_luggage? = true [
+      set agents_luggage insert-item 0 agents_luggage total_boarding_time
+    ]
+
+  ]]
+
+  let agents_no_luggage []
+  foreach boarded_agents [agent -> ask turtle agent [
+    if has_luggage? = false[
+      set agents_no_luggage insert-item 0 agents_no_luggage total_boarding_time
+    ]
+
+  ]]
+
+  report abs ((mean agents_luggage) - (mean agents_no_luggage))
+
+
+end
+
+
+
 to go
   tick
 
@@ -698,7 +780,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-2
+4
 
 BUTTON
 85
@@ -759,7 +841,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-0.0
+50.0
 1
 1
 NIL
@@ -785,7 +867,7 @@ family_size
 family_size
 1
 3
-1.0
+3.0
 1
 1
 NIL
@@ -1166,7 +1248,7 @@ false
 Polygon -7500403 true true 270 75 225 30 30 225 75 270
 Polygon -7500403 true true 30 75 75 30 270 225 225 270
 @#$#@#$#@
-NetLogo 6.0.4
+NetLogo 6.1.0
 @#$#@#$#@
 @#$#@#$#@
 @#$#@#$#@
