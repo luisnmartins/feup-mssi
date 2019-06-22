@@ -681,12 +681,17 @@ to board_not_seated_agent [agent]
           [
             set transparent? false
           ]
+          if(count turtles-here > 1)[
 
-          let my_patch ((turtles-on patch-here) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0])
-          let most_distant max-one-of my_patch [ abs(target_seat_col) ]
-          if (most_distant != self) [
-            stop
-          ]
+            let my_patch (turtles-on patch-here) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0 and is_stowing? = false]
+            let most_distant max-one-of my_patch [ abs(target_seat_col) ]
+            show most_distant
+            if (most_distant = self) [
+              if (most_distant != self) [
+                  stop
+              ]
+            ]
+         ]
         ]
       ; has a middle or window seat
       if abs(target_seat_col) > 1
@@ -784,19 +789,22 @@ to move_seated_agent [agent]
       if move_aisle? = true [stop]
       set total_time_of_seat_interferences total_time_of_seat_interferences + 1
       ifelse (count turtles-here = 1) [
-        if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1) with [analysed = true]) [
+        if ((patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1) with [analysed = true]) or (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1))) [
           fd patch_ticks_speed
+          stop
         ]
       ]
       [
-        let my_patch (turtles-on patch-here)
+        let my_patch (turtles-on patch-here) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0 and is_stowing? = false]
         let most_distant max-one-of my_patch [ abs(target_seat_col) ]
         if (most_distant = self) [
           if (patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
             fd patch_ticks_speed
+            stop
           ]
         ]
       ]
+
     ]
   ]
 end
