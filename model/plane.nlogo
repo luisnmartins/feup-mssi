@@ -995,7 +995,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-4
+8
 
 BUTTON
 85
@@ -1082,7 +1082,7 @@ family_size
 family_size
 1
 3
-2.0
+3.0
 1
 1
 NIL
@@ -1115,7 +1115,7 @@ luggage_speed
 luggage_speed
 0.6
 1
-1.0
+0.6
 0.1
 1
 NIL
@@ -1128,7 +1128,7 @@ SWITCH
 321
 human_factor
 human_factor
-0
+1
 1
 -1000
 
@@ -1500,9 +1500,9 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="0"/>
@@ -1512,6 +1512,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="2"/>
@@ -1523,9 +1529,9 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="0"/>
@@ -1535,6 +1541,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="2"/>
@@ -1546,9 +1558,9 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="0"/>
@@ -1559,19 +1571,25 @@ NetLogo 6.1.0
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
     </enumeratedValueSet>
   </experiment>
-  <experiment name="block-back-to-front-0" repetitions="100" runMetricsEveryStep="false">
+  <experiment name="block-back-to-front-0" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
     <setup>setup</setup>
     <go>go</go>
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="0"/>
@@ -1581,6 +1599,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
@@ -1592,9 +1616,9 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="0"/>
@@ -1604,6 +1628,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
@@ -1615,9 +1645,9 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="0"/>
@@ -1627,6 +1657,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
@@ -1638,9 +1674,9 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="0"/>
@@ -1650,6 +1686,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
@@ -1661,13 +1703,13 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
-    <metric>get_all_boarding_times</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="50"/>
     </enumeratedValueSet>
@@ -1676,6 +1718,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="2"/>
@@ -1687,13 +1735,13 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
-    <metric>get_all_boarding_times</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="50"/>
     </enumeratedValueSet>
@@ -1702,6 +1750,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="2"/>
@@ -1713,13 +1767,13 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
-    <metric>get_all_boarding_times</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="50"/>
     </enumeratedValueSet>
@@ -1728,6 +1782,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
@@ -1739,13 +1799,13 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
-    <metric>get_all_boarding_times</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="50"/>
     </enumeratedValueSet>
@@ -1754,6 +1814,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
@@ -1765,13 +1831,13 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
-    <metric>get_all_boarding_times</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="50"/>
     </enumeratedValueSet>
@@ -1780,6 +1846,12 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
@@ -1791,9 +1863,12 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
@@ -1807,6 +1882,12 @@ NetLogo 6.1.0
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
     </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
+    </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
     </enumeratedValueSet>
@@ -1817,10 +1898,16 @@ NetLogo 6.1.0
     <metric>seat_interferences</metric>
     <metric>total_elapsed_time</metric>
     <metric>aisle_interferences</metric>
-    <metric>get_all_satisfactions</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
     <enumeratedValueSet variable="luggage_percentage">
       <value value="50"/>
     </enumeratedValueSet>
@@ -1829,6 +1916,157 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="aircraft_model">
       <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="Example" repetitions="1" runMetricsEveryStep="true">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>count turtles</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;random&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="block-front-to-back-0" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;block-front-to-back&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="block-front-to-back-50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;block-front-to-back&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="front-to-back-0" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;front-to-back&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="front-to-back-50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;front-to-back&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="false"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.6"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
