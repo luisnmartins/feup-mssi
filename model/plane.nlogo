@@ -552,13 +552,11 @@ to board_not_seated_agent [agent]
      if target_seat_row = round aisle_row and not is_seated?
      [
       ;; Decide which direction rotate when it has found its row.
-      show "TESTE12"
       ifelse target_seat_col > 0 [set heading 0] [set heading 180]
       set xcor ((round aisle_row) - (aircraft_rows / 2))
       set patch_ticks_speed 1
 
       ifelse (is_stowing? = false and stowing_time > 0 and human_factor) [
-
         ; get overhead bin sector
         let overhead_full 0
         let other_side 0
@@ -623,39 +621,39 @@ to board_not_seated_agent [agent]
           ifelse(simp_num <= 93) [
             set transparent? true
             set simpathy simpathy + 1
-            set is_stowing? true
           ]
           [
             set transparent? false
             set simpathy 1
-            ifelse(overhead_full > 0) [
-              setup_probability agent "available_aisle_not_filling"
-
-            ]
-            [
-              setup_probability agent "available_aisle_and_filling"
-            ]
-            set is_stowing? true
           ]
+          ifelse(overhead_full > 0) [
+            setup_probability agent "available_aisle_not_filling"
+
+          ]
+          [
+            setup_probability agent "available_aisle_and_filling"
+          ]
+          set is_stowing? true
+
        ]
        [
           let simp_num (random (100 * simpathy))
           ifelse(simp_num <= 53) [
             set transparent? true
             set simpathy simpathy + 1
-            set is_stowing? true
           ]
           [
             set transparent? false
             set simpathy 1
-            ifelse(overhead_full > 0) [
-              setup_probability agent "not_available_aisle_and_not_filling"
-            ]
-            [
-              setup_probability agent "not_available_aisle_but_filling"
-            ]
-            set is_stowing? true
+
           ]
+          ifelse(overhead_full > 0) [
+            setup_probability agent "not_available_aisle_and_not_filling"
+          ]
+          [
+            setup_probability agent "not_available_aisle_but_filling"
+          ]
+          set is_stowing? true
        ]
       ]
       [
@@ -687,7 +685,6 @@ to board_not_seated_agent [agent]
           let my_patch ((turtles-on patch-here) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0])
           let most_distant max-one-of my_patch [ abs(target_seat_col) ]
           if (most_distant != self) [
-            show most_distant
             stop
           ]
         ]
@@ -998,7 +995,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-9
+7
 
 BUTTON
 85
@@ -1059,7 +1056,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-49.0
+50.0
 1
 1
 NIL
@@ -1085,7 +1082,7 @@ family_size
 family_size
 1
 3
-1.0
+2.0
 1
 1
 NIL
@@ -1118,7 +1115,7 @@ luggage_speed
 luggage_speed
 0.6
 1
-0.6
+1.0
 0.1
 1
 NIL
