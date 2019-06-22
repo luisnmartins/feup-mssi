@@ -1,3 +1,5 @@
+extensions [array]
+
 globals [
   aircraft_rows
   passenger_no
@@ -8,6 +10,12 @@ globals [
   aisle_interferences
   boarded_agents
   group_size
+  available_aisle_and_filling
+  available_aisle_not_filling
+  not_available_aisle_but_filling
+  not_available_aisle_and_not_filling
+  entrances_rate
+  overhead_bins
 ]
 
 turtles-own [
@@ -26,6 +34,8 @@ turtles-own [
   on_aisle_interference?
   transparent?
   simpathy
+  overhead_bin_for_luggage
+  entrance_time
 
 
   have_to_wait?
@@ -45,6 +55,8 @@ patches-own [
 to setup
   __clear-all-and-reset-ticks
   setup_aircraft_model
+  setup_availability_and_filling
+  setup_entrance_rate
   setup_passengers
   setup_boarding_method
   set boarded_agents []
@@ -69,6 +81,8 @@ to setup_passengers
     set patch_ticks_speed 1
     set transparent? false
     set simpathy 1
+    set entrance_time 0
+    set overhead_bins array:from-list n-values 20 [0]
 
 
     set heading 90
@@ -90,22 +104,50 @@ to setup_passengers
 
   ;; Assign each passenger a unique seat on the airplane.
   foreach (range 0 passenger_no) [
-    pass_who -> ask turtle pass_who [
-      set target_seat_row (item 0 (item pass_who permutations))
-      set target_seat_col (item 1 (item pass_who permutations))
-    ]
+    pass_who -> (
+      ask turtle pass_who [
+        set target_seat_row (item 0 (item pass_who permutations))
+        set target_seat_col (item 1 (item pass_who permutations))
+        if(human_factor) [setup_probability pass_who "entrance_time"]
+      ])
   ]
-
 
 
   let passengers_with_luggage round ( 180 * luggage_percentage / 100 )
   ask n-of passengers_with_luggage turtles [
     set shape "person farmer"
-    set stowing_time 2 + random 5
+    set stowing_time 1
     set has_luggage? true
+    if(human_factor) [set patch_ticks_speed luggage_speed]
   ]
 
 end
+
+to setup_probability [agent variable]
+    let rate random-float 1
+    let i 0
+    ifelse (variable = "entrance_time") [
+       foreach entrances_rate [x -> ifelse(rate < x) [ask turtle agent [set entrance_time i] stop] [set i (i + 1)]]
+    ]
+    [
+     if(variable = "available_aisle_not_filling") [
+      foreach available_aisle_not_filling [x -> ifelse(rate < x) [ask turtle agent [set stowing_time i] stop] [set i (i + 1)]]
+     ]
+     if(variable = "available_aisle_and_filling") [
+      foreach available_aisle_and_filling [x -> ifelse(rate < x) [ask turtle agent [set stowing_time i] stop] [set i (i + 1)]]
+     ]
+
+     if(variable = "not_available_aisle_and_not_filling") [
+      foreach not_available_aisle_and_not_filling [x -> ifelse(rate < x) [ask turtle agent [set stowing_time i] stop] [set i (i + 1)]]
+     ]
+
+     if(variable = "not_available_aisle_but_filling") [
+      foreach not_available_aisle_but_filling [x -> ifelse(rate < x) [ask turtle agent [set stowing_time i] stop] [set i (i + 1)]]
+     ]
+
+    ]
+end
+
 
 to setup_aircraft_model
   if aircraft_model = "A320" [set aircraft_rows 30]
@@ -115,7 +157,7 @@ to setup_aircraft_model
     row -> foreach (filter [i -> i != 0] (range -3 4)) [
       col -> ask patch (row - (aircraft_rows / 2)) col [
         set pcolor green
-        set plabel (word (row))
+        set plabel (word (col))
       ]
     ]
   ]
@@ -136,6 +178,78 @@ to setup_boarding_method
   if boarding_method = "steffen" [set ticket_queue setup_steffen_method]
   if boarding_method = "kautzka" [set ticket_queue setup_kautzka_method]
 end
+
+to setup_availability_and_filling
+  set available_aisle_and_filling [
+    0.25703
+    0.30824
+    0.50978
+    0.63650
+    0.73223
+    0.76510
+    0.85617
+    0.90183
+    0.92738
+    0.93407
+    0.94867
+    0.95368
+    0.95809
+    1
+  ]
+  set available_aisle_not_filling [
+    0.20000
+    0.21336
+    0.28309
+    0.39237
+    0.45540
+    0.62440
+    0.68456
+    0.72131
+    0.78084
+    0.84515
+    0.86672
+    0.87955
+    0.88393
+    1
+  ]
+  set not_available_aisle_but_filling [
+    0.43574
+    0.45263
+    0.64688
+    0.77020
+    0.83552
+    0.92163
+    0.97276
+    0.98387
+    0.98939
+    0.99360
+    0.99432
+    0.99546
+    0.99659
+    1
+  ]
+  set not_available_aisle_and_not_filling [
+    0.38755
+    0.40644
+    0.44793
+    0.55773
+    0.57379
+    0.67191
+    0.73781
+    0.82276
+    0.85420
+    0.87896
+    0.89091
+    0.89794
+    0.90373
+    1
+  ]
+end
+
+to setup_entrance_rate
+  set entrances_rate [0.30000 0.430331 0.702985 0.842925  0.883241 0.928445 0.977536 1]
+end
+
 
 ;; Setup random boarding method.
 to-report setup_random_method
@@ -418,11 +532,14 @@ end
 
 ;; Board the next passenger and remove it from the queue (FIFO).
 to board_next_passenger
-  ask turtle first ticket_queue [set has_boarded? true]
-  set boarded_agents lput first ticket_queue boarded_agents
-  set ticket_queue but-first ticket_queue
-
-  if length ticket_queue > 0 [set next_boarding_passenger first ticket_queue]
+  ask turtle first ticket_queue [ifelse(entrance_time > 0) [set entrance_time entrance_time - 1]
+    [
+     set has_boarded? true
+     set boarded_agents lput first ticket_queue boarded_agents
+     set ticket_queue but-first ticket_queue
+     if length ticket_queue > 0 [set next_boarding_passenger first ticket_queue]
+    ]
+  ]
 end
 
 to board_not_seated_agent [agent]
@@ -432,54 +549,148 @@ to board_not_seated_agent [agent]
      set total_boarding_time total_boarding_time + 1
      set analysed true
      let aisle_row (xcor + (aircraft_rows / 2))
-
-
-     if target_seat_row = aisle_row and not is_seated?
+     if target_seat_row = round aisle_row and not is_seated?
      [
       ;; Decide which direction rotate when it has found its row.
+      show "TESTE12"
       ifelse target_seat_col > 0 [set heading 0] [set heading 180]
+      set xcor ((round aisle_row) - (aircraft_rows / 2))
+      set patch_ticks_speed 1
 
-      ifelse (is_stowing? = false and stowing_time > 0) [
-       ifelse(patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) [
-          let number (random (100 * simpathy))
-          ifelse(number <= 93) [
+      ifelse (is_stowing? = false and stowing_time > 0 and human_factor) [
+
+        ; get overhead bin sector
+        let overhead_full 0
+        let other_side 0
+        if(target_seat_col < 0)
+        [
+          set other_side 1
+        ]
+
+        ifelse(target_seat_col / 3 < 1) [
+          ; just the first sector
+
+          if((array:item overhead_bins (0 + 10 * other_side)) > 2)[
+            set overhead_full 1
+          ]
+          set overhead_bin_for_luggage (0 + 10 * other_side)
+        ]
+        [
+          ; just the last sector
+          ifelse(target_seat_col / 3 = 10) [
+            if((array:item overhead_bins (9 + 10 * other_side)) > 2)[
+              set overhead_full 1
+            ]
+            set overhead_bin_for_luggage (9 + 10 * other_side)
+          ]
+          [
+            let sector ((target_seat_col / 3) + 10 * other_side)
+            ; for the last row of each sector
+            let total 0
+            ifelse (target_seat_col mod 3 = 0) [
+              set total (array:item overhead_bins sector) + (array:item overhead_bins (sector + 1))
+              ifelse(array:item overhead_bins sector < 4) [
+                set overhead_bin_for_luggage sector
+              ]
+              [
+                set overhead_bin_for_luggage (sector + 1)
+              ]
+            ]
+            ; for rows in the middle
+            [
+              set total (array:item overhead_bins (floor sector)) + (array:item overhead_bins (ceiling sector))
+              ifelse(array:item overhead_bins (floor sector) < 4) [
+                set overhead_bin_for_luggage (floor sector)
+              ]
+              [
+                set overhead_bin_for_luggage (ceiling sector)
+              ]
+
+            ]
+            if(total > 8)[
+              set overhead_full 1
+            ]
+          ]
+        ]
+
+
+        ;generate rando number for probability of stowing time
+        let prob_stowing_time random-float 1
+
+        ifelse(((patch-ahead 1 != nobody and not any? (turtles-on patch-ahead 1)) or (patch-at 0 -1 != nobody and not any? (turtles-on patch-at 0 -1)))) [
+
+          let simp_num (random (100 * simpathy))
+          ifelse(simp_num <= 93) [
             set transparent? true
             set simpathy simpathy + 1
-            stop
+            set is_stowing? true
           ]
           [
             set transparent? false
             set simpathy 1
+            ifelse(overhead_full > 0) [
+              setup_probability agent "available_aisle_not_filling"
+
+            ]
+            [
+              setup_probability agent "available_aisle_and_filling"
+            ]
             set is_stowing? true
           ]
        ]
        [
-          let number (random (100 * simpathy))
-          ifelse(number <= 53) [
+          let simp_num (random (100 * simpathy))
+          ifelse(simp_num <= 53) [
             set transparent? true
             set simpathy simpathy + 1
-            stop
+            set is_stowing? true
           ]
           [
             set transparent? false
             set simpathy 1
+            ifelse(overhead_full > 0) [
+              setup_probability agent "not_available_aisle_and_not_filling"
+            ]
+            [
+              setup_probability agent "not_available_aisle_but_filling"
+            ]
             set is_stowing? true
           ]
        ]
-      ][
-        set is_stowing? true
-      ]
-
-      ifelse (stowing_time > 0) [
-       set stowing_time stowing_time - 1
-       stop
       ]
       [
-        if(is_stowing? = true) [
-          set is_stowing? false
-        ]
+        if(is_stowing? = false and stowing_time > 0) [ set is_stowing? true ]
       ]
 
+
+        let current_row target_seat_row
+        let current_seat_col target_seat_col
+        ifelse (stowing_time > 0) [
+          set stowing_time stowing_time - 1
+          stop
+        ]
+        [
+          if(is_stowing? = true) [
+            array:set overhead_bins overhead_bin_for_luggage ((array:item overhead_bins overhead_bin_for_luggage) + 1)
+            set is_stowing? false
+          ]
+        ]
+        if(human_factor)[
+          ifelse(current_row > 1 and patch-at -1 0 != nobody and any? (turtles-on patch-at -1 0) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0  and abs(target_seat_col) > abs(current_seat_col)]) [
+            set transparent? true
+            stop
+          ]
+          [
+            set transparent? false
+          ]
+
+          let my_patch ((turtles-on patch-here) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0])
+          let most_distant max-one-of my_patch [ abs(target_seat_col) ]
+          if (most_distant != self) [
+            show most_distant
+            stop
+          ]
+        ]
       ; has a middle or window seat
       if abs(target_seat_col) > 1
       [
@@ -492,7 +703,6 @@ to board_not_seated_agent [agent]
             set number_of_seat_interferences number_of_seat_interferences + 1
             fd (0 - patch_ticks_speed)
             set move_aisle? true
-            show move_aisle?
           ]
           set seat_interferences seat_interferences + 1
           set number_of_seat_interferences number_of_seat_interferences + 1
@@ -516,8 +726,7 @@ to board_not_seated_agent [agent]
       ]
     ]
 
-    ifelse (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90) or (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = true] and target_seat_row = aisle_row + 1 and heading = 90)
-	  [
+    ifelse (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90)[
 	    set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
 	    if on_aisle_interference? = false [
 	      set number_of_aisle_interferences number_of_aisle_interferences + 1
@@ -557,8 +766,19 @@ to move_seated_agent [agent]
   ask turtle agent [
     if(not is_seated? or ycor = target_seat_col) [stop]
     set analysed true
-    show "SEATED"
-    show move_aisle?
+
+    let current_row target_seat_row
+    let current_seat_col target_seat_col
+    if(human_factor and ycor = 0)[
+      ifelse(current_row > 1 and patch-at -1 0 != nobody and any? (turtles-on patch-at -1 0) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0  and abs(target_seat_col) > abs(current_seat_col)]) [
+        set transparent? true
+        stop
+      ]
+      [
+        set transparent? false
+      ]
+     ]
+
     ifelse (ycor = 0 and move_aisle? = true) [
       beep
       set move_aisle? false
@@ -674,8 +894,6 @@ to go
   ;; Board the next passenger and remove it from the queue (FIFO).
   if length ticket_queue > 0 [board_next_passenger]
 
-  show boarded_agents
-
   foreach boarded_agents [agent -> ask turtle agent [set analysed false] board_not_seated_agent agent]
 
   foreach boarded_agents [agent -> move_seated_agent agent]
@@ -780,7 +998,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-4
+9
 
 BUTTON
 85
@@ -841,7 +1059,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-50.0
+49.0
 1
 1
 NIL
@@ -867,17 +1085,17 @@ family_size
 family_size
 1
 3
-3.0
+1.0
 1
 1
 NIL
 HORIZONTAL
 
 PLOT
-753
-243
-953
-393
+936
+226
+1136
+376
 Passenger seating rate
 NIL
 NIL
@@ -890,6 +1108,32 @@ false
 "" ""
 PENS
 "default" 1.0 0 -16777216 true "" "plot count turtles with [is_seated?]"
+
+SLIDER
+754
+246
+926
+279
+luggage_speed
+luggage_speed
+0.6
+1
+0.6
+0.1
+1
+NIL
+HORIZONTAL
+
+SWITCH
+757
+288
+900
+321
+human_factor
+human_factor
+0
+1
+-1000
 
 @#$#@#$#@
 ## WHAT IS IT?
