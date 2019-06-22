@@ -605,7 +605,7 @@ to board_not_seated_agent [agent]
               ]
 
             ]
-            if(total > 8)[
+            if(total > 4)[
               set overhead_full 1
             ]
           ]
@@ -995,7 +995,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-7
+4
 
 BUTTON
 85
