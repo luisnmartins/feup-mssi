@@ -822,15 +822,56 @@ to-report get_all_satisfactions
 
 end
 
+to-report get_all_satisfactions_v2
+  let total_satisfactions []
+  foreach boarded_agents [agent -> ask turtle agent [
+    let satisfaction 0
+    set satisfaction (0.7 * total_boarding_time) + (0.2 * (total_time_of_seat_interferences / seat_interferences)) + (0.1 * (total_time_of_aisle_interferences / aisle_interferences))
+
+    set total_satisfactions insert-item 0 total_satisfactions satisfaction
+
+  ]]
+  report  reverse total_satisfactions
+
+end
+
 to-report get_average_satisfaction
   let satisfaction 0
   report mean get_all_satisfactions
 
 end
 
+to-report get_average_satisfaction_v2
+  let satisfaction 0
+  report mean get_all_satisfactions_v2
+end
+
 to-report get_median_satisfaction
   let satisfaction 0
   report median get_all_satisfactions
+end
+
+to-report get_median_satisfaction_v2
+  let satisfaction 0
+  report median get_all_satisfactions_v2
+end
+
+to-report get_median_aisle_interferences_per_person
+  let total_interferences []
+  foreach boarded_agents [agent -> ask turtle agent [
+    set total_interferences insert-item 0 total_interferences number_of_aisle_interferences
+  ]]
+
+  report median total_interferences
+end
+
+to-report get_median_seat_interferences_per_person
+  let total_interferences []
+  foreach boarded_agents [agent -> ask turtle agent [
+    set total_interferences insert-item 0 total_interferences number_of_seat_interferences
+  ]]
+
+  report median total_interferences
 end
 
 to-report get_all_boarding_times
@@ -886,6 +927,8 @@ to-report difference_average
 
 
 end
+
+
 
 
 
@@ -1003,7 +1046,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-8
+4
 
 BUTTON
 85
@@ -1064,7 +1107,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-50.0
+0.0
 1
 1
 NIL
@@ -1510,6 +1553,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -1539,6 +1586,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -1568,6 +1619,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -1597,6 +1652,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -1626,6 +1685,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -1655,6 +1718,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -1684,6 +1751,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -1713,6 +1784,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
@@ -1745,6 +1820,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
@@ -1777,6 +1856,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
@@ -1809,6 +1892,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
@@ -1841,6 +1928,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
@@ -1873,6 +1964,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
@@ -1908,6 +2003,10 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
@@ -1966,6 +2065,8 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -1995,6 +2096,8 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
@@ -2027,6 +2130,8 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
     <metric>get_all_satisfactions</metric>
     <metric>get_all_boarding_times</metric>
     <enumeratedValueSet variable="luggage_percentage">
@@ -2056,6 +2161,8 @@ NetLogo 6.1.0
     <metric>aisle_interferences</metric>
     <metric>get_average_satisfaction</metric>
     <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
     <metric>difference_time_with_luggage</metric>
     <metric>difference_time_without_luggage</metric>
     <metric>difference_average</metric>
