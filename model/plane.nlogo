@@ -1198,7 +1198,7 @@ to board_not_seated_agent [agent]
           ]
         ]
         if(human_factor)[
-          ifelse(current_row > 1 and patch-at -1 0 != nobody and any? (turtles-on patch-at -1 0) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0  and abs(target_seat_col) > abs(current_seat_col)]) [
+          ifelse(current_row > 1 and patch-at -1 0 != nobody and any? (turtles-on patch-at -1 0) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0  and abs(target_seat_col) > abs(current_seat_col) and stowing_time = 0]) [
             set transparent? true
             stop
           ]
