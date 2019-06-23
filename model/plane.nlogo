@@ -1209,7 +1209,6 @@ to board_not_seated_agent [agent]
 
             let my_patch (turtles-on patch-here) with [target_seat_row = current_row and target_seat_col * current_seat_col > 0 and is_stowing? = false]
             let most_distant max-one-of my_patch [ abs(target_seat_col) ]
-            show most_distant
             if (most_distant = self) [
               if (most_distant != self) [
                   stop
@@ -1570,7 +1569,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-3
+4
 
 BUTTON
 85
@@ -1631,7 +1630,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-50.0
+0.0
 1
 1
 NIL
