@@ -108,7 +108,14 @@ to setup_passengers
       ask turtle pass_who [
         set target_seat_row (item 0 (item pass_who permutations))
         set target_seat_col (item 1 (item pass_who permutations))
-        if(human_factor) [setup_probability pass_who "entrance_time"]
+        if(human_factor) [
+          setup_probability pass_who "entrance_time"
+          if(distributed_passenger_speed) [
+            let speed random-normal 1 (0.25 / 1.3)
+            set patch_ticks_speed speed
+          ]
+        ]
+
       ])
   ]
 
@@ -118,7 +125,7 @@ to setup_passengers
     set shape "person farmer"
     set stowing_time 1
     set has_luggage? true
-    if(human_factor) [set patch_ticks_speed luggage_speed]
+    if(not distributed_passenger_speed) [set patch_ticks_speed luggage_speed]
   ]
 
 end
@@ -1251,8 +1258,12 @@ to board_not_seated_agent [agent]
       ]
     ]
 
-    ifelse (patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false] and heading = 90)[
-	    set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
+    if(target_seat_row = (round aisle_row) + 1 and patch_ticks_speed > 1) [
+      set patch_ticks_speed 1
+    ]
+
+    ifelse (patch-ahead 1 != nobody and ycor = 0 and ((any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false]) or (any? (turtles-on patch-ahead 1) with [heading != 90 and analysed = true] and stowing_time > 0)) and heading = 90)[
+      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
 	    if on_aisle_interference? = false [
 	      set number_of_aisle_interferences number_of_aisle_interferences + 1
 	      set aisle_interferences aisle_interferences + 1
@@ -1261,7 +1272,7 @@ to board_not_seated_agent [agent]
 	    stop
 	   ]
 	   [
-	    if patch-ahead 1 != nobody and ycor = 0 and any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false] and heading = 90
+      if (patch-ahead 1 != nobody and ycor = 0 and ((any? (turtles-on patch-ahead 1) with [heading = 90 and transparent? = false]) or (any? (turtles-on patch-ahead 1) with [heading = 90 and analysed = true] and stowing_time > 0)) and heading = 90)
 	    [
 	      set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
 	      if on_aisle_interference? = false [
@@ -1569,7 +1580,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-4
+1
 
 BUTTON
 85
@@ -1662,24 +1673,6 @@ family_size
 NIL
 HORIZONTAL
 
-PLOT
-936
-226
-1136
-376
-Passenger seating rate
-NIL
-NIL
-0.0
-10.0
-0.0
-10.0
-true
-false
-"" ""
-PENS
-"default" 1.0 0 -16777216 true "" "plot count turtles with [is_seated?]"
-
 SLIDER
 754
 246
@@ -1703,6 +1696,17 @@ SWITCH
 human_factor
 human_factor
 0
+1
+-1000
+
+SWITCH
+750
+334
+990
+367
+distributed_passenger_speed
+distributed_passenger_speed
+1
 1
 -1000
 
