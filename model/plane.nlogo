@@ -1262,7 +1262,7 @@ to board_not_seated_agent [agent]
       set patch_ticks_speed 1
     ]
 
-    ifelse (patch-ahead 1 != nobody and ycor = 0 and ((any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false]) or (any? (turtles-on patch-ahead 1) with [heading != 90 and analysed = true] and stowing_time > 0)) and heading = 90)[
+    ifelse (patch-ahead 1 != nobody and ycor = 0 and ((any? (turtles-on patch-ahead 1) with [heading != 90 and transparent? = false]) or (any? (turtles-on patch-ahead 1) with [heading != 90 and analysed = true and not is_seated?] and stowing_time > 0)) and heading = 90)[
       set total_time_of_aisle_interferences total_time_of_aisle_interferences + 1
 	    if on_aisle_interference? = false [
 	      set number_of_aisle_interferences number_of_aisle_interferences + 1
@@ -1316,7 +1316,6 @@ to move_seated_agent [agent]
      ]
 
     ifelse (ycor = 0 and move_aisle? = true) [
-      beep
       set move_aisle? false
    ]
    [
