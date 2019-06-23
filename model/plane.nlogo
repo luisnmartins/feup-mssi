@@ -1570,7 +1570,7 @@ CHOOSER
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-4
+3
 
 BUTTON
 85
@@ -1631,7 +1631,7 @@ luggage_percentage
 luggage_percentage
 0
 100
-51.0
+50.0
 1
 1
 NIL
@@ -2552,7 +2552,7 @@ NetLogo 6.1.0
       <value value="false"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="luggage_speed">
-      <value value="0.6"/>
+      <value value="0.81"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
@@ -2706,6 +2706,625 @@ NetLogo 6.1.0
     </enumeratedValueSet>
     <enumeratedValueSet variable="luggage_speed">
       <value value="0.6"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_steffen_0" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;steffen&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="2"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_kautzka_0_2" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;kautzka&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="2"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_kautzka_0_3" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;kautzka&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_block-back-to-front-0" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;block-back-to-front&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_back-to-front-0" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;back-to-front&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_random_0" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;random&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_wilma_0" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;wilma&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_steffen_50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;steffen&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="2"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_kautzka_50_2" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;kautzka&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="2"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_kautzka_50_3" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;kautzka&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_block-back-to-front-50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;block-back-to-front&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_back-to-front-50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;back-to-front&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_random_50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;random&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_wilma_50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_median_aisle_interferences_per_person</metric>
+    <metric>get_median_seat_interferences_per_person</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;wilma&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_block-front-to-back-0" repetitions="100" sequentialRunOrder="false" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;block-front-to-back&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_block-front-to-back-50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;block-front-to-back&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_front-to-back-0" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="0"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;front-to-back&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="family_size">
+      <value value="3"/>
+    </enumeratedValueSet>
+  </experiment>
+  <experiment name="human_front-to-back-50" repetitions="100" runMetricsEveryStep="false">
+    <setup>setup</setup>
+    <go>go</go>
+    <metric>seat_interferences</metric>
+    <metric>total_elapsed_time</metric>
+    <metric>aisle_interferences</metric>
+    <metric>get_average_satisfaction</metric>
+    <metric>get_median_satisfaction</metric>
+    <metric>get_average_satisfaction_v2</metric>
+    <metric>get_median_satisfaction_v2</metric>
+    <metric>difference_time_with_luggage</metric>
+    <metric>difference_time_without_luggage</metric>
+    <metric>difference_average</metric>
+    <metric>get_all_satisfactions</metric>
+    <metric>get_all_boarding_times</metric>
+    <enumeratedValueSet variable="luggage_percentage">
+      <value value="50"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="boarding_method">
+      <value value="&quot;front-to-back&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="aircraft_model">
+      <value value="&quot;A320&quot;"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="human_factor">
+      <value value="true"/>
+    </enumeratedValueSet>
+    <enumeratedValueSet variable="luggage_speed">
+      <value value="0.81"/>
     </enumeratedValueSet>
     <enumeratedValueSet variable="family_size">
       <value value="3"/>
