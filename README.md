@@ -1,0 +1,5 @@
+# How to
+
+The simulation was all done in Netlogo, as such, in order to run it,you just need to open the 'plane.nlogo' file inside the folder 'model' with Netlogo. With the program opened in Netlogo you can change the input variables as you like. When you are ready to run the simulation, click in the _setup_ button and then the last _go_ button. You could see the simulation running, but you may realize that not all the data studied in the paper is shown. This is because we used BehaviourSpace tool in order to test the various scenarios numerous times. What behaviour space does is, runs a pre configured experience X times, and stores its results in a csv file. This is where all the data gathered is available.
+
+If you want to run BehaviourSpace, in Netlogo, go to _Tools_ and you should find an option called _BehaviourSpace_ ,after that a list of experiments is shown, you can create new ones or run the ones that already exist. When you decide to run an expirement, Netlogo will prompt to you save the generated file, then you just need to wait to the expirement to finish (the time it takes to complete depends on your cpu power).
