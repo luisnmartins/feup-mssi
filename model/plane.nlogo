@@ -68,7 +68,7 @@ to setup_passengers
   create-turtles passenger_no [
     ; Passenger appearance.
     set shape "person"
-    set color one-of [ white brown blue yellow ]
+    set color random 255
     set target_seat_row 5
     set target_seat_col -3
     set is_stowing? false
@@ -124,7 +124,7 @@ to setup_passengers
 
   let passengers_with_luggage round ( 180 * luggage_percentage / 100 )
   ask n-of passengers_with_luggage turtles [
-    set shape "person farmer"
+    set shape "person business"
     set stowing_time 1
     set has_luggage? true
     if(not distributed_passenger_speed) [set patch_ticks_speed luggage_speed]
@@ -2040,9 +2040,9 @@ NIL
 1
 
 CHOOSER
-751
+755
 66
-889
+893
 111
 aircraft_model
 aircraft_model
@@ -2050,10 +2050,10 @@ aircraft_model
 0
 
 MONITOR
-934
-114
 1026
-159
+62
+1118
+107
 NIL
 passenger_no
 17
@@ -2061,14 +2061,14 @@ passenger_no
 11
 
 CHOOSER
-752
+756
 116
-907
+911
 161
 boarding_method
 boarding_method
 "block-back-to-front" "back-to-front" "block-front-to-back" "front-to-back" "random" "wilma" "weird-wilma" "steffen" "kautzka" "ordered"
-3
+4
 
 BUTTON
 85
@@ -2110,10 +2110,10 @@ total_elapsed_time
 11
 
 MONITOR
-933
-62
-1060
-107
+1027
+176
+1154
+221
 seat_interferences
 seat_interferences
 17
@@ -2121,9 +2121,9 @@ seat_interferences
 11
 
 SLIDER
-752
+756
 165
-931
+935
 198
 luggage_percentage
 luggage_percentage
@@ -2136,10 +2136,10 @@ NIL
 HORIZONTAL
 
 MONITOR
-935
-170
-1064
-215
+1026
+119
+1155
+164
 aisle_interferences
 aisle_interferences
 17
@@ -2147,9 +2147,9 @@ aisle_interferences
 11
 
 SLIDER
-752
+756
 203
-924
+928
 236
 family_size
 family_size
@@ -2162,9 +2162,9 @@ NIL
 HORIZONTAL
 
 SLIDER
-754
+758
 246
-926
+930
 279
 luggage_speed
 luggage_speed
@@ -2188,10 +2188,10 @@ human_factor
 -1000
 
 SWITCH
-750
-334
-990
-367
+757
+332
+997
+365
 distributed_passenger_speed
 distributed_passenger_speed
 0
@@ -2414,6 +2414,23 @@ Polygon -7500403 true true 105 90 120 195 90 285 105 300 135 300 150 225 165 300
 Rectangle -7500403 true true 127 79 172 94
 Polygon -7500403 true true 195 90 240 150 225 180 165 105
 Polygon -7500403 true true 105 90 60 150 75 180 135 105
+
+person business
+false
+0
+Rectangle -1 true false 120 90 180 180
+Polygon -13345367 true false 135 90 150 105 135 180 150 195 165 180 150 105 165 90
+Polygon -7500403 true true 120 90 105 90 60 195 90 210 116 154 120 195 90 285 105 300 135 300 150 225 165 300 195 300 210 285 180 195 183 153 210 210 240 195 195 90 180 90 150 165
+Circle -7500403 true true 110 5 80
+Rectangle -7500403 true true 127 76 172 91
+Line -16777216 false 172 90 161 94
+Line -16777216 false 128 90 139 94
+Polygon -13345367 true false 195 225 195 300 270 270 270 195
+Rectangle -13791810 true false 180 225 195 300
+Polygon -14835848 true false 180 226 195 226 270 196 255 196
+Polygon -13345367 true false 209 202 209 216 244 202 243 188
+Line -16777216 false 180 90 150 165
+Line -16777216 false 120 90 150 165
 
 person farmer
 false
